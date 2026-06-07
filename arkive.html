@@ -33,9 +33,7 @@
 </script>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-/* ═══════════════════════════════════════════
-   ARKIVE — CSS CUSTOM PROPERTIES
-═══════════════════════════════════════════ */
+/* CSS */
 :root {
   --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -90,9 +88,7 @@
   --input-bg:    rgba(0,0,0,0.03);
 }
 
-/* ═══════════════════════════════════════════
-   RESET
-═══════════════════════════════════════════ */
+
 *{margin:0;padding:0;box-sizing:border-box;}
 html{scroll-behavior:smooth;}
 body{
@@ -104,9 +100,7 @@ body{
   overflow-x:hidden;
 }
 
-/* ═══════════════════════════════════════════
-   BACKGROUND TEXTURE
-═══════════════════════════════════════════ */
+  
 body::before{
   content:'';
   position:fixed;inset:0;z-index:0;pointer-events:none;
@@ -121,9 +115,7 @@ body::before{
     radial-gradient(ellipse 60% 40% at 80% 110%, rgba(40,85,200,0.03) 0%, transparent 60%);
 }
 
-/* ═══════════════════════════════════════════
-   NAVIGATION
-═══════════════════════════════════════════ */
+
 nav{
   position:fixed;top:0;left:0;right:0;z-index:100;
   padding:0 32px;height:64px;
@@ -180,15 +172,11 @@ nav{
 [data-theme="light"] .btn-nav{box-shadow:0 0 18px rgba(45,106,0,0.3),0 0 36px rgba(45,106,0,0.12);}
 [data-theme="light"] .btn-nav:hover{box-shadow:0 0 28px rgba(45,106,0,0.5),0 0 60px rgba(45,106,0,0.2);}
 
-/* ═══════════════════════════════════════════
-   PAGES
-═══════════════════════════════════════════ */
+
 .page{display:none;min-height:100vh;padding-top:64px;}
 .page.active{display:block;}
 
-/* ═══════════════════════════════════════════
-   LANDING — HERO
-═══════════════════════════════════════════ */
+
 .hero{
   position:relative;
   padding:80px 32px 60px;
@@ -377,9 +365,6 @@ nav{
 .feat-title{font-size:1rem;font-weight:600;color:var(--text);margin-bottom:8px;}
 .feat-desc{font-size:.82rem;color:var(--text2);line-height:1.6;}
 
-/* ═══════════════════════════════════════════
-   HOW IT WORKS — HORIZONTAL STEPS
-═══════════════════════════════════════════ */
 .how-wrap{
   background:var(--bg2);
   border-top:1px solid var(--border);
@@ -416,9 +401,7 @@ nav{
 .step-title{font-size:.9rem;font-weight:600;color:var(--text);margin-bottom:6px;}
 .step-desc{font-size:.78rem;color:var(--text2);line-height:1.5;}
 
-/* ═══════════════════════════════════════════
-   HUMAN GRID SECTION (like the inspiration)
-═══════════════════════════════════════════ */
+
 .human-section{padding:80px 32px;max-width:1200px;margin:0 auto;}
 .humans-grid{
   display:grid;
@@ -480,9 +463,6 @@ nav{
   font-size:.65rem;color:var(--accent);font-weight:600;
 }
 
-/* ═══════════════════════════════════════════
-   CTA BANNER
-═══════════════════════════════════════════ */
 .cta-wrap{
   margin:0 32px 80px;border-radius:24px;
   background:var(--accent);
@@ -511,9 +491,7 @@ nav{
 }
 .btn-cta:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(0,0,0,0.2);}
 
-/* ═══════════════════════════════════════════
-   FOOTER
-═══════════════════════════════════════════ */
+
 footer{
   border-top:1px solid var(--border);
   padding:32px;
@@ -537,9 +515,7 @@ footer{
 }
 .chain-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);}
 
-/* ═══════════════════════════════════════════
-   DASHBOARD PAGE
-═══════════════════════════════════════════ */
+
 .dash-layout{
   display:grid;grid-template-columns:260px 1fr;
   min-height:calc(100vh - 64px);
@@ -1730,10 +1706,6 @@ function setActiveNav(el) {
 }
 
 //  EIP-6963 MULTI-WALLET ENGINE 
-// FIX 1: Listener registered ONCE globally - not re-added on each modal open
-// FIX 2: connectToWallet is properly async
-// FIX 3: window.ethereum fallback covers MetaMask + all injected wallets
-
 var walletIcons = {
   'io.metamask':         'https://upload.wikimedia.org/wikipedia/commons/3/36/MetaMask_Fox.svg',
   'com.okex.wallet':     'https://static.okx.com/cdn/assets/imgs/221/87810F0B7B57F082.png',
@@ -1748,7 +1720,6 @@ function getWalletEmoji(rdns, name) {
   return walletEmojis[rdns] || (name ? name.charAt(0) : '');
 }
 
-// Register EIP-6963 listener ONCE - catches wallets that announce at page load
 window.addEventListener('eip6963:announceProvider', function(event) {
   var info = event.detail.info;
   var prov = event.detail.provider;
@@ -1788,7 +1759,7 @@ function buildWalletList() {
   if (!listEl) return;
   listEl.innerHTML = '';
 
-  // Detect file:// protocol - wallets cannot inject into file:// pages
+  
   if (window.location.protocol === 'file:') {
     showWalletState('None');
     var noneEl = document.getElementById('wStateNone');
@@ -1816,7 +1787,6 @@ function buildWalletList() {
 
   var allWallets = detectedWallets.slice();
 
-  // window.ethereum fallback - most reliable for MetaMask, OKX, Rabby etc
   if (window.ethereum) {
     var getName = function(p) {
       if (p.isRabby)            return { n:'Rabby Wallet',    r:'io.rabby' };
@@ -1829,7 +1799,7 @@ function buildWalletList() {
       return                           { n:'Browser Wallet',  r:'' };
     };
 
-    // Handle multiple providers (e.g. MetaMask + Rabby both installed)
+    
     var providers = window.ethereum.providers || [window.ethereum];
     providers.forEach(function(prov) {
       var info = getName(prov);
@@ -1864,7 +1834,7 @@ function buildWalletList() {
   });
 }
 
-// ASYNC - properly awaits wallet response
+  
 async function connectToWallet(wallet) {
   var wname = wallet.info.name;
   var emoji = getWalletEmoji(wallet.info.rdns, wname);
