@@ -41,7 +41,7 @@ ARKIVE connects the physical world to OPN Chain:
 🔗 [Open ARKIVE](https://your-netlify-link.netlify.app)
 
 ## Contract Address
-📍 `0x...` — OPN Chain Testnet
+📍 `0x03fb1829E5bD83B28cEa9041b4A923F70d79f7E6` — OPN Chain Testnet
 
 ## Built For
 OPN Chain Builders Programme — Season 1 — Open Track
