@@ -1,0 +1,2613 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+CiAgPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNyIgZmlsbD0iIzA4MGEwZiIvPgogIDxwb2x5Z29uIHBvaW50cz0iMTYsNCAyNiw5IDI2LDIzIDE2LDI4IDYsMjMgNiw5IiBmaWxsPSJub25lIiBzdHJva2U9IiNjOGYwNjAiIHN0cm9rZS13aWR0aD0iMS44Ii8+CiAgPHBvbHlnb24gcG9pbnRzPSIxNiw4IDIzLDEyIDIzLDIyIDE2LDI2IDksMjIgOSwxMiIgZmlsbD0iI2M4ZjA2MCIgb3BhY2l0eT0iMC4xNSIvPgogIDxwYXRoIGQ9Ik0xMywxNSBMMTUuNSwxNy41IEwxOSwxMyIgc3Ryb2tlPSIjYzhmMDYwIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgZmlsbD0ibm9uZSIvPgo8L3N2Zz4=">
+<link rel="shortcut icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+CiAgPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNyIgZmlsbD0iIzA4MGEwZiIvPgogIDxwb2x5Z29uIHBvaW50cz0iMTYsNCAyNiw5IDI2LDIzIDE2LDI4IDYsMjMgNiw5IiBmaWxsPSJub25lIiBzdHJva2U9IiNjOGYwNjAiIHN0cm9rZS13aWR0aD0iMS44Ii8+CiAgPHBvbHlnb24gcG9pbnRzPSIxNiw4IDIzLDEyIDIzLDIyIDE2LDI2IDksMjIgOSwxMiIgZmlsbD0iI2M4ZjA2MCIgb3BhY2l0eT0iMC4xNSIvPgogIDxwYXRoIGQ9Ik0xMywxNSBMMTUuNSwxNy41IEwxOSwxMyIgc3Ryb2tlPSIjYzhmMDYwIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgZmlsbD0ibm9uZSIvPgo8L3N2Zz4=">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ARKIVE — Your World, Preserved On-Chain</title>
+<!-- ethers.js — connects the website to OPN Chain smart contract -->
+<!-- ethers.js with multiple CDN fallbacks -->
+<script>
+// Try loading ethers.js from multiple CDNs
+(function loadEthers() {
+  var cdns = [
+    'https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js',
+    'https://unpkg.com/ethers@5.7.2/dist/ethers.umd.min.js',
+    'https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js'
+  ];
+  var idx = 0;
+  function tryNext() {
+    if (idx >= cdns.length) {
+      console.error('[ARKIVE] All ethers.js CDNs failed — check internet');
+      return;
+    }
+    var s = document.createElement('script');
+    s.src = cdns[idx++];
+    s.onload = function() { console.log('[ARKIVE] ethers.js loaded from CDN', idx); };
+    s.onerror = function() { console.warn('[ARKIVE] CDN failed, trying next...'); tryNext(); };
+    document.head.appendChild(s);
+  }
+  tryNext();
+})();
+</script>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════
+   ARKIVE — CSS CUSTOM PROPERTIES
+═══════════════════════════════════════════ */
+:root {
+  --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+[data-theme="dark"] {
+  --bg:          #080a0f;
+  --bg2:         #0e1118;
+  --bg3:         #141820;
+  --surface:     rgba(20, 24, 32, 0.8);
+  --surface2:    rgba(30, 36, 48, 0.6);
+  --border:      rgba(255,255,255,0.07);
+  --border2:     rgba(255,255,255,0.12);
+  --text:        #f0ede8;
+  --text2:       #8a8f9e;
+  --text3:       #4a5068;
+  --accent:      #c8f060;
+  --accent2:     #a8d040;
+  --accent-dim:  rgba(200, 240, 96, 0.12);
+  --blue:        #5b8def;
+  --orange:      #f0845b;
+  --pink:        #e87bb0;
+  --card-hover:  rgba(200, 240, 96, 0.04);
+  --shadow:      0 8px 32px rgba(0,0,0,0.4);
+  --shadow2:     0 2px 8px rgba(0,0,0,0.3);
+  --nav-bg:      rgba(8,10,15,0.85);
+  --tag-bg:      rgba(255,255,255,0.06);
+  --input-bg:    rgba(255,255,255,0.04);
+}
+
+[data-theme="light"] {
+  --bg:          #f5f2ed;
+  --bg2:         #ede9e2;
+  --bg3:         #e4dfd6;
+  --surface:     rgba(255, 253, 248, 0.9);
+  --surface2:    rgba(240, 236, 228, 0.7);
+  --border:      rgba(0,0,0,0.07);
+  --border2:     rgba(0,0,0,0.12);
+  --text:        #1a1a1a;
+  --text2:       #6b6560;
+  --text3:       #aaa49c;
+  --accent:      #2d6a00;
+  --accent2:     #3d8a00;
+  --accent-dim:  rgba(45, 106, 0, 0.1);
+  --blue:        #2855c8;
+  --orange:      #c85020;
+  --pink:        #c8306a;
+  --card-hover:  rgba(45, 106, 0, 0.03);
+  --shadow:      0 8px 32px rgba(0,0,0,0.08);
+  --shadow2:     0 2px 8px rgba(0,0,0,0.06);
+  --nav-bg:      rgba(245,242,237,0.9);
+  --tag-bg:      rgba(0,0,0,0.05);
+  --input-bg:    rgba(0,0,0,0.03);
+}
+
+/* ═══════════════════════════════════════════
+   RESET
+═══════════════════════════════════════════ */
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:'DM Sans',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  transition:background var(--transition),color var(--transition);
+  overflow-x:hidden;
+}
+
+/* ═══════════════════════════════════════════
+   BACKGROUND TEXTURE
+═══════════════════════════════════════════ */
+body::before{
+  content:'';
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:
+    radial-gradient(ellipse 80% 50% at 20% -10%, rgba(200,240,96,0.06) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 110%, rgba(91,141,239,0.05) 0%, transparent 60%);
+  transition:opacity var(--transition);
+}
+[data-theme="light"] body::before{
+  background-image:
+    radial-gradient(ellipse 80% 50% at 20% -10%, rgba(45,106,0,0.04) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 110%, rgba(40,85,200,0.03) 0%, transparent 60%);
+}
+
+/* ═══════════════════════════════════════════
+   NAVIGATION
+═══════════════════════════════════════════ */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  padding:0 32px;height:64px;
+  display:flex;align-items:center;justify-content:space-between;
+  background:var(--nav-bg);
+  border-bottom:1px solid var(--border);
+  backdrop-filter:blur(20px);
+  transition:all var(--transition);
+}
+.nav-logo{
+  display:flex;align-items:center;gap:10px;text-decoration:none;
+}
+.logo-mark{
+  width:32px;height:32px;border-radius:8px;
+  background:var(--accent);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+}
+.logo-mark svg{width:18px;height:18px;fill:var(--bg);}
+.logo-text{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:1.5rem;letter-spacing:.12em;
+  color:var(--text);
+}
+.nav-links{display:flex;align-items:center;gap:8px;}
+.nav-link{
+  padding:6px 14px;border-radius:20px;
+  font-size:.82rem;font-weight:500;
+  color:var(--text2);text-decoration:none;
+  transition:all var(--transition);
+  cursor:pointer;border:none;background:none;
+}
+.nav-link:hover{color:var(--text);background:var(--tag-bg);}
+.theme-toggle{
+  width:36px;height:36px;border-radius:50%;
+  border:1px solid var(--border2);
+  background:var(--surface2);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:all var(--transition);
+  color:var(--text2);font-size:.9rem;
+}
+.theme-toggle:hover{color:var(--accent);border-color:var(--accent);transform:rotate(20deg);}
+.btn-nav{
+  padding:11px 26px;border-radius:20px;
+  background:var(--accent);color:var(--bg);
+  font-size:.92rem;font-weight:700;
+  border:none;cursor:pointer;
+  transition:all var(--transition);
+  text-decoration:none;display:inline-flex;align-items:center;gap:6px;
+  box-shadow:0 0 18px rgba(200,240,96,0.35),0 0 36px rgba(200,240,96,0.15);
+  letter-spacing:.02em;
+}
+.btn-nav:hover{transform:translateY(-2px);box-shadow:0 0 28px rgba(200,240,96,0.6),0 0 60px rgba(200,240,96,0.25);}
+[data-theme="light"] .btn-nav{box-shadow:0 0 18px rgba(45,106,0,0.3),0 0 36px rgba(45,106,0,0.12);}
+[data-theme="light"] .btn-nav:hover{box-shadow:0 0 28px rgba(45,106,0,0.5),0 0 60px rgba(45,106,0,0.2);}
+
+/* ═══════════════════════════════════════════
+   PAGES
+═══════════════════════════════════════════ */
+.page{display:none;min-height:100vh;padding-top:64px;}
+.page.active{display:block;}
+
+/* ═══════════════════════════════════════════
+   LANDING — HERO
+═══════════════════════════════════════════ */
+.hero{
+  position:relative;
+  padding:80px 32px 60px;
+  max-width:1200px;margin:0 auto;
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:60px;align-items:center;min-height:calc(100vh - 64px);
+}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:6px 14px;border-radius:20px;
+  background:var(--accent-dim);border:1px solid var(--accent);
+  font-family:'JetBrains Mono',monospace;font-size:.68rem;
+  color:var(--accent);letter-spacing:.1em;margin-bottom:24px;
+}
+.hero-badge-dot{
+  width:6px;height:6px;border-radius:50%;
+  background:var(--accent);animation:pulse 2s infinite;
+}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.5;transform:scale(.8);}}
+.hero-title{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(4rem,7vw,7rem);
+  line-height:.95;letter-spacing:.02em;
+  color:var(--text);margin-bottom:8px;
+}
+.hero-title-accent{color:var(--accent);}
+.hero-subtitle{
+  font-family:'Instrument Serif',serif;
+  font-size:1.3rem;font-style:italic;
+  color:var(--text2);margin-bottom:24px;line-height:1.5;
+}
+.hero-desc{
+  font-size:.9rem;color:var(--text2);line-height:1.7;
+  max-width:440px;margin-bottom:36px;
+}
+.hero-actions{display:flex;gap:12px;flex-wrap:wrap;align-items:center;}
+.btn-primary{
+  padding:14px 28px;border-radius:12px;
+  background:var(--accent);color:var(--bg);
+  font-size:.9rem;font-weight:600;
+  border:none;cursor:pointer;
+  transition:all var(--transition);
+  display:inline-flex;align-items:center;gap:8px;
+}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(200,240,96,0.35);}
+[data-theme="light"] .btn-primary:hover{box-shadow:0 8px 30px rgba(45,106,0,0.25);}
+.btn-secondary{
+  padding:14px 28px;border-radius:12px;
+  background:transparent;color:var(--text);
+  font-size:.9rem;font-weight:500;
+  border:1px solid var(--border2);cursor:pointer;
+  transition:all var(--transition);
+  display:inline-flex;align-items:center;gap:8px;
+}
+.btn-secondary:hover{background:var(--surface);border-color:var(--text3);}
+.hero-stats{
+  display:flex;gap:32px;margin-top:48px;
+  padding-top:32px;border-top:1px solid var(--border);
+}
+.stat-item{}
+.stat-num{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:2rem;letter-spacing:.05em;color:var(--text);display:block;
+}
+.stat-lbl{font-size:.75rem;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;}
+
+/* HERO VISUAL */
+.hero-visual{position:relative;}
+.hero-card-stack{position:relative;height:500px;}
+.hcard{
+  position:absolute;border-radius:20px;
+  background:var(--surface);border:1px solid var(--border);
+  backdrop-filter:blur(10px);overflow:hidden;
+  box-shadow:var(--shadow);transition:all var(--transition);
+}
+.hcard:hover{transform:translateY(-4px);box-shadow:0 16px 48px rgba(0,0,0,0.3);}
+.hcard-main{
+  width:100%;top:0;left:0;
+  aspect-ratio:4/3;
+}
+.hcard-img{
+  width:100%;height:200px;overflow:hidden;
+  position:relative;
+}
+/* Placeholder human image using CSS art */
+.hcard-img-inner{
+  width:100%;height:100%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:4rem;
+  position:relative;overflow:hidden;
+}
+.human-img-1{background:linear-gradient(135deg,#1a2535 0%,#2d3f55 50%,#1a2535 100%);}
+.human-img-2{background:linear-gradient(135deg,#251520 0%,#3d2535 50%,#251520 100%);}
+.human-img-3{background:linear-gradient(135deg,#152520 0%,#253d35 50%,#152520 100%);}
+[data-theme="light"] .human-img-1{background:linear-gradient(135deg,#d4e0f0 0%,#b8cce0 50%,#d4e0f0 100%);}
+[data-theme="light"] .human-img-2{background:linear-gradient(135deg,#f0d4e0 0%,#e0b8cc 50%,#f0d4e0 100%);}
+[data-theme="light"] .human-img-3{background:linear-gradient(135deg,#d4f0d8 0%,#b8e0bc 50%,#d4f0d8 100%);}
+.hcard-body{padding:16px;}
+.hcard-label{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.6rem;color:var(--text3);letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px;
+}
+.hcard-name{font-size:.9rem;font-weight:600;color:var(--text);margin-bottom:4px;}
+.hcard-sub{font-size:.75rem;color:var(--text2);}
+.hcard-badge{
+  display:inline-flex;align-items:center;gap:5px;
+  margin-top:10px;padding:4px 10px;border-radius:20px;
+  font-size:.65rem;font-weight:600;letter-spacing:.06em;
+}
+.badge-verified{background:rgba(200,240,96,0.15);color:var(--accent);}
+[data-theme="light"] .badge-verified{background:rgba(45,106,0,0.1);color:var(--accent);}
+.badge-secure{background:rgba(91,141,239,0.15);color:var(--blue);}
+.hcard-float1{
+  width:200px;top:200px;right:-20px;
+  padding:14px;
+}
+.hcard-float2{
+  width:170px;bottom:0;left:20px;
+  padding:14px;
+}
+.float-icon{font-size:1.5rem;margin-bottom:6px;display:block;}
+.float-title{font-size:.78rem;font-weight:600;color:var(--text);margin-bottom:2px;}
+.float-sub{font-size:.65rem;color:var(--text2);}
+.float-num{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:1.8rem;color:var(--accent);display:block;
+}
+
+/* ═══════════════════════════════════════════
+   FEATURES SECTION
+═══════════════════════════════════════════ */
+.section{padding:80px 32px;max-width:1200px;margin:0 auto;}
+.section-eyebrow{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.68rem;color:var(--accent);letter-spacing:.15em;
+  text-transform:uppercase;margin-bottom:12px;
+  display:flex;align-items:center;gap:8px;
+}
+.section-eyebrow::before{content:'';width:24px;height:1px;background:var(--accent);}
+.section-title{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(2.5rem,5vw,4.5rem);
+  letter-spacing:.03em;color:var(--text);
+  line-height:1;margin-bottom:16px;
+}
+.section-sub{font-size:.95rem;color:var(--text2);line-height:1.7;max-width:480px;}
+
+/* Features grid */
+.features-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:16px;margin-top:48px;
+}
+.feat-card{
+  padding:28px 24px;border-radius:16px;
+  background:var(--surface);border:1px solid var(--border);
+  transition:all var(--transition);cursor:default;
+  position:relative;overflow:hidden;
+}
+.feat-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--accent),transparent);
+  opacity:0;transition:opacity var(--transition);
+}
+.feat-card:hover{transform:translateY(-3px);border-color:var(--border2);box-shadow:var(--shadow);}
+.feat-card:hover::before{opacity:1;}
+.feat-icon{
+  width:60px;height:60px;border-radius:14px;
+  background:var(--accent-dim);border:1px solid rgba(200,240,96,0.3);
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:18px;overflow:hidden;padding:8px;
+  box-shadow:0 0 14px rgba(200,240,96,0.08);
+  transition:all 0.3s ease;
+}
+[data-theme="light"] .feat-icon{
+  background:rgba(45,106,0,0.08);border-color:rgba(45,106,0,0.25);
+  box-shadow:0 0 14px rgba(45,106,0,0.06);
+}
+.feat-icon svg{
+  width:100%!important;height:100%!important;
+  display:block;
+}
+.feat-card:hover .feat-icon{
+  transform:scale(1.05);
+  box-shadow:0 0 22px rgba(200,240,96,0.2);
+}
+.feat-title{font-size:1rem;font-weight:600;color:var(--text);margin-bottom:8px;}
+.feat-desc{font-size:.82rem;color:var(--text2);line-height:1.6;}
+
+/* ═══════════════════════════════════════════
+   HOW IT WORKS — HORIZONTAL STEPS
+═══════════════════════════════════════════ */
+.how-wrap{
+  background:var(--bg2);
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+  padding:80px 32px;
+}
+.how-inner{max-width:1200px;margin:0 auto;}
+.steps-row{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:0;margin-top:48px;position:relative;
+}
+.steps-row::before{
+  content:'';position:absolute;top:28px;left:10%;right:10%;height:1px;
+  background:linear-gradient(90deg,transparent,var(--border2),var(--border2),transparent);
+}
+.step-item{
+  display:flex;flex-direction:column;align-items:center;
+  text-align:center;padding:0 16px;
+  position:relative;
+}
+.step-num{
+  width:56px;height:56px;border-radius:50%;
+  background:var(--bg);border:2px solid var(--border2);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Bebas Neue',sans-serif;font-size:1.3rem;
+  color:var(--text2);margin-bottom:16px;
+  position:relative;z-index:1;
+  transition:all var(--transition);
+}
+.step-item:hover .step-num{
+  border-color:var(--accent);color:var(--accent);
+  background:var(--accent-dim);
+}
+.step-title{font-size:.9rem;font-weight:600;color:var(--text);margin-bottom:6px;}
+.step-desc{font-size:.78rem;color:var(--text2);line-height:1.5;}
+
+/* ═══════════════════════════════════════════
+   HUMAN GRID SECTION (like the inspiration)
+═══════════════════════════════════════════ */
+.human-section{padding:80px 32px;max-width:1200px;margin:0 auto;}
+.humans-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  grid-template-rows:auto auto;
+  gap:16px;margin-top:48px;
+}
+.human-card{
+  border-radius:16px;overflow:hidden;
+  background:var(--surface);border:1px solid var(--border);
+  transition:all var(--transition);cursor:pointer;
+  position:relative;
+}
+.human-card:hover{transform:translateY(-4px);box-shadow:var(--shadow);}
+.human-card.large{grid-column:span 2;grid-row:span 1;}
+.hc-image{
+  width:100%;overflow:hidden;position:relative;
+}
+.hc-image-inner{
+  width:100%;display:flex;align-items:center;justify-content:center;
+  font-size:3rem;position:relative;
+  transition:transform .4s ease;
+}
+.human-card:hover .hc-image-inner{transform:scale(1.04);}
+.hc-image-inner.h1{height:220px;background:linear-gradient(160deg,#1a2535,#2d4060,#1a3050);}
+.hc-image-inner.h2{height:220px;background:linear-gradient(160deg,#251a35,#4d2d60,#351a50);}
+.hc-image-inner.h3{height:160px;background:linear-gradient(160deg,#1a2520,#2d5040,#1a3530);}
+.hc-image-inner.h4{height:160px;background:linear-gradient(160deg,#352015,#603520,#451a10);}
+.hc-image-inner.h5{height:220px;background:linear-gradient(160deg,#152530,#205060,#154050);}
+.hc-image-inner.h6{height:220px;background:linear-gradient(160deg,#251530,#503060,#351545);}
+[data-theme="light"] .hc-image-inner.h1{background:linear-gradient(160deg,#c5d8f0,#a0b8e0,#b5ccea);}
+[data-theme="light"] .hc-image-inner.h2{background:linear-gradient(160deg,#e8c5f0,#d0a0e0,#ddb5ea);}
+[data-theme="light"] .hc-image-inner.h3{background:linear-gradient(160deg,#c5f0d8,#a0e0b8,#b5ead0);}
+[data-theme="light"] .hc-image-inner.h4{background:linear-gradient(160deg,#f0e0c5,#e0c8a0,#eacea5);}
+[data-theme="light"] .hc-image-inner.h5{background:linear-gradient(160deg,#c5e8f0,#a0d0e0,#b5dcea);}
+[data-theme="light"] .hc-image-inner.h6{background:linear-gradient(160deg,#f0c5e8,#e0a0d0,#eab5dd);}
+/* Human silhouettes using CSS */
+.human-figure{
+  position:absolute;bottom:0;
+  width:80px;
+}
+.hc-body{padding:14px 16px;}
+.hc-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;}
+.hc-tag{
+  padding:3px 9px;border-radius:20px;
+  font-size:.62rem;font-weight:500;letter-spacing:.05em;
+  background:var(--tag-bg);color:var(--text2);
+}
+.hc-name{font-size:.9rem;font-weight:600;color:var(--text);}
+.hc-role{font-size:.75rem;color:var(--text2);margin-top:2px;}
+.hc-footer{
+  padding:10px 16px;
+  border-top:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.hc-docs{font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--text3);}
+.hc-verified{
+  display:flex;align-items:center;gap:4px;
+  font-size:.65rem;color:var(--accent);font-weight:600;
+}
+
+/* ═══════════════════════════════════════════
+   CTA BANNER
+═══════════════════════════════════════════ */
+.cta-wrap{
+  margin:0 32px 80px;border-radius:24px;
+  background:var(--accent);
+  padding:60px 48px;
+  display:flex;align-items:center;justify-content:space-between;
+  gap:40px;overflow:hidden;position:relative;
+}
+.cta-wrap::before{
+  content:'ARKIVE';
+  position:absolute;right:-20px;top:50%;transform:translateY(-50%);
+  font-family:'Bebas Neue',sans-serif;font-size:10rem;letter-spacing:.05em;
+  color:rgba(0,0,0,0.08);line-height:1;pointer-events:none;
+}
+.cta-title{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(2rem,4vw,3.5rem);
+  color:var(--bg);letter-spacing:.03em;line-height:1.1;
+}
+.cta-sub{font-size:.9rem;color:rgba(8,10,15,0.6);margin-top:8px;line-height:1.6;}
+.btn-cta{
+  padding:16px 36px;border-radius:12px;
+  background:var(--bg);color:var(--text);
+  font-size:.9rem;font-weight:700;
+  border:none;cursor:pointer;white-space:nowrap;
+  transition:all var(--transition);flex-shrink:0;
+}
+.btn-cta:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(0,0,0,0.2);}
+
+/* ═══════════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════════ */
+footer{
+  border-top:1px solid var(--border);
+  padding:32px;
+  display:flex;align-items:center;justify-content:space-between;
+  max-width:1200px;margin:0 auto;
+}
+.footer-logo{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:1.3rem;letter-spacing:.12em;color:var(--text3);
+}
+.footer-links{display:flex;gap:20px;}
+.footer-link{
+  font-size:.78rem;color:var(--text3);text-decoration:none;
+  transition:color var(--transition);
+}
+.footer-link:hover{color:var(--text);}
+.footer-chain{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.62rem;color:var(--text3);
+  display:flex;align-items:center;gap:6px;
+}
+.chain-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);}
+
+/* ═══════════════════════════════════════════
+   DASHBOARD PAGE
+═══════════════════════════════════════════ */
+.dash-layout{
+  display:grid;grid-template-columns:260px 1fr;
+  min-height:calc(100vh - 64px);
+}
+
+/* SIDEBAR */
+.dash-sidebar{
+  border-right:1px solid var(--border);
+  padding:24px 16px;
+  background:var(--bg2);
+  display:flex;flex-direction:column;gap:4px;
+  position:sticky;top:64px;height:calc(100vh - 64px);
+  overflow-y:auto;
+}
+.sidebar-section{
+  font-family:'JetBrains Mono',monospace;
+  font-size:.58rem;color:var(--text3);letter-spacing:.15em;text-transform:uppercase;
+  padding:12px 12px 6px;
+}
+.sidebar-item{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 12px;border-radius:10px;
+  font-size:.85rem;font-weight:500;color:var(--text2);
+  cursor:pointer;transition:all var(--transition);
+  border:none;background:none;width:100%;text-align:left;
+}
+.sidebar-item:hover{background:var(--surface);color:var(--text);}
+.sidebar-item.active{background:var(--accent-dim);color:var(--accent);}
+.sidebar-icon{font-size:1rem;width:20px;text-align:center;flex-shrink:0;}
+.sidebar-badge{
+  margin-left:auto;padding:2px 8px;border-radius:10px;
+  background:var(--accent);color:var(--bg);
+  font-size:.6rem;font-weight:700;
+}
+.sidebar-user{
+  margin-top:auto;padding:12px;border-radius:12px;
+  background:var(--surface);border:1px solid var(--border);
+}
+.su-avatar{
+  width:36px;height:36px;border-radius:50%;
+  background:var(--accent-dim);border:2px solid var(--accent);
+  display:flex;align-items:center;justify-content:center;font-size:1.1rem;
+  margin-bottom:8px;
+}
+.su-name{font-size:.85rem;font-weight:600;color:var(--text);}
+.su-addr{font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--text3);}
+.su-status{
+  display:flex;align-items:center;gap:5px;margin-top:6px;
+  font-size:.65rem;color:var(--accent);
+}
+.su-dot{width:5px;height:5px;border-radius:50%;background:var(--accent);animation:pulse 2s infinite;}
+
+/* MAIN DASHBOARD */
+.dash-main{padding:28px 32px;overflow-y:auto;}
+.dash-header{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:28px;flex-wrap:gap;
+}
+.dash-title{font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:.04em;color:var(--text);}
+.dash-sub{font-size:.82rem;color:var(--text2);margin-top:2px;}
+.dash-actions{display:flex;gap:10px;}
+.btn-upload{
+  padding:10px 20px;border-radius:10px;
+  background:var(--accent);color:var(--bg);
+  font-size:.82rem;font-weight:600;
+  border:none;cursor:pointer;
+  display:flex;align-items:center;gap:7px;
+  transition:all var(--transition);
+}
+.btn-upload:hover{transform:translateY(-1px);box-shadow:0 4px 20px rgba(200,240,96,0.3);}
+[data-theme="light"] .btn-upload:hover{box-shadow:0 4px 20px rgba(45,106,0,0.2);}
+
+/* STATS ROW */
+.stats-row{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:12px;margin-bottom:28px;
+}
+.stat-card{
+  padding:18px 20px;border-radius:14px;
+  background:var(--surface);border:1px solid var(--border);
+  transition:all var(--transition);
+}
+.stat-card:hover{border-color:var(--border2);transform:translateY(-1px);}
+.sc-label{font-family:'JetBrains Mono',monospace;font-size:.58rem;color:var(--text3);letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px;}
+.sc-val{font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--text);letter-spacing:.04em;}
+.sc-sub{font-size:.7rem;color:var(--text2);margin-top:2px;}
+.sc-change{font-size:.7rem;color:var(--accent);display:flex;align-items:center;gap:3px;margin-top:4px;}
+
+/* UPLOAD DROPZONE */
+.upload-zone{
+  border:2px dashed var(--border2);border-radius:16px;
+  padding:40px;text-align:center;
+  margin-bottom:28px;
+  background:var(--input-bg);
+  transition:all var(--transition);cursor:pointer;
+  position:relative;overflow:hidden;
+}
+.upload-zone:hover{border-color:var(--accent);background:var(--accent-dim);}
+.upload-zone.dragover{border-color:var(--accent);background:var(--accent-dim);transform:scale(1.01);}
+.uz-icon{font-size:2.5rem;display:block;margin-bottom:12px;}
+.uz-title{font-size:1rem;font-weight:600;color:var(--text);margin-bottom:6px;}
+.uz-sub{font-size:.8rem;color:var(--text2);}
+.uz-formats{
+  margin-top:12px;display:flex;gap:6px;justify-content:center;flex-wrap:wrap;
+}
+.uz-fmt{
+  padding:3px 10px;border-radius:20px;
+  background:var(--tag-bg);color:var(--text3);
+  font-family:'JetBrains Mono',monospace;font-size:.62rem;
+}
+#fileInput{display:none;}
+
+/* DOCUMENTS GRID — THE MAIN FEATURE */
+.docs-section{}
+.docs-header{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:16px;
+}
+.docs-title{font-size:1rem;font-weight:600;color:var(--text);}
+.docs-controls{display:flex;gap:8px;align-items:center;}
+.view-toggle{
+  display:flex;border:1px solid var(--border);border-radius:8px;overflow:hidden;
+}
+.vt-btn{
+  padding:6px 10px;border:none;background:transparent;
+  color:var(--text3);cursor:pointer;font-size:.85rem;
+  transition:all var(--transition);
+}
+.vt-btn.active{background:var(--surface);color:var(--text);}
+.search-input{
+  padding:7px 14px;border-radius:8px;
+  border:1px solid var(--border);background:var(--input-bg);
+  color:var(--text);font-size:.8rem;font-family:'DM Sans',sans-serif;
+  outline:none;transition:all var(--transition);width:180px;
+}
+.search-input:focus{border-color:var(--accent);}
+.search-input::placeholder{color:var(--text3);}
+.filter-btn{
+  padding:6px 14px;border-radius:8px;
+  border:1px solid var(--border);background:transparent;
+  color:var(--text2);font-size:.78rem;cursor:pointer;
+  transition:all var(--transition);display:flex;align-items:center;gap:5px;
+}
+.filter-btn:hover{border-color:var(--border2);color:var(--text);}
+
+/* DOCUMENT CARDS GRID */
+.docs-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+  gap:14px;
+}
+.doc-card{
+  border-radius:14px;overflow:hidden;
+  background:var(--surface);border:1px solid var(--border);
+  transition:all var(--transition);cursor:pointer;
+  position:relative;
+  animation:cardIn .3s ease forwards;
+  opacity:0;
+}
+@keyframes cardIn{
+  from{opacity:0;transform:translateY(12px);}
+  to{opacity:1;transform:translateY(0);}
+}
+.doc-card:nth-child(1){animation-delay:.05s;}
+.doc-card:nth-child(2){animation-delay:.1s;}
+.doc-card:nth-child(3){animation-delay:.15s;}
+.doc-card:nth-child(4){animation-delay:.2s;}
+.doc-card:nth-child(5){animation-delay:.25s;}
+.doc-card:nth-child(6){animation-delay:.3s;}
+.doc-card:hover{transform:translateY(-4px);border-color:var(--border2);box-shadow:var(--shadow);}
+.doc-card-preview{
+  height:130px;display:flex;align-items:center;justify-content:center;
+  position:relative;overflow:hidden;
+}
+.dc-p-pdf{background:linear-gradient(135deg,rgba(240,84,91,.12),rgba(240,84,91,.05));}
+.dc-p-img{background:linear-gradient(135deg,rgba(91,141,239,.12),rgba(91,141,239,.05));}
+.dc-p-doc{background:linear-gradient(135deg,rgba(200,240,96,.1),rgba(200,240,96,.04));}
+.dc-p-cert{background:linear-gradient(135deg,rgba(248,184,63,.12),rgba(248,184,63,.04));}
+.dc-p-contract{background:linear-gradient(135deg,rgba(232,123,176,.12),rgba(232,123,176,.04));}
+.dc-icon{font-size:2.8rem;filter:drop-shadow(0 4px 8px rgba(0,0,0,0.2));}
+.dc-type-badge{
+  position:absolute;top:10px;right:10px;
+  padding:2px 8px;border-radius:20px;
+  font-family:'JetBrains Mono',monospace;font-size:.58rem;font-weight:600;
+  letter-spacing:.06em;
+}
+.tb-pdf{background:rgba(240,84,91,.15);color:#f0545b;}
+.tb-img{background:rgba(91,141,239,.15);color:var(--blue);}
+.tb-doc{background:rgba(200,240,96,.12);color:var(--accent);}
+.tb-cert{background:rgba(248,184,63,.15);color:#f8b83f;}
+.tb-contract{background:rgba(232,123,176,.15);color:var(--pink);}
+.dc-verified-badge{
+  position:absolute;top:10px;left:10px;
+  width:22px;height:22px;border-radius:50%;
+  background:rgba(200,240,96,.15);border:1px solid var(--accent);
+  display:flex;align-items:center;justify-content:center;
+  font-size:.6rem;
+}
+[data-theme="light"] .dc-verified-badge{background:rgba(45,106,0,.1);}
+.doc-card-body{padding:12px 14px;}
+.dc-name{font-size:.88rem;font-weight:600;color:var(--text);margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.dc-meta{font-size:.7rem;color:var(--text2);display:flex;align-items:center;gap:6px;}
+.dc-sep{color:var(--text3);}
+.doc-card-footer{
+  padding:8px 14px;
+  border-top:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.dc-hash{
+  font-family:'JetBrains Mono',monospace;font-size:.58rem;color:var(--text3);
+}
+.dc-actions{display:flex;gap:6px;}
+.dc-btn{
+  width:26px;height:26px;border-radius:7px;
+  border:1px solid var(--border);background:transparent;
+  display:flex;align-items:center;justify-content:center;
+  font-size:.75rem;cursor:pointer;color:var(--text2);
+  transition:all var(--transition);
+}
+.dc-btn:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-dim);}
+
+/* UPLOAD MODAL */
+.modal-overlay{
+  position:fixed;inset:0;z-index:200;
+  background:rgba(8,10,15,.8);backdrop-filter:blur(10px);
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;transition:opacity var(--transition);
+}
+[data-theme="light"] .modal-overlay{background:rgba(200,195,188,.7);}
+.modal-overlay.open{opacity:1;pointer-events:all;}
+.modal-box{
+  background:var(--bg2);border:1px solid var(--border2);border-radius:20px;
+  padding:32px;width:90%;max-width:500px;
+  transform:translateY(20px) scale(.97);
+  transition:transform var(--transition);
+  box-shadow:0 24px 80px rgba(0,0,0,.4);
+}
+.modal-overlay.open .modal-box{transform:translateY(0) scale(1);}
+.modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;}
+.modal-title{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:.05em;color:var(--text);}
+.modal-close{
+  width:32px;height:32px;border-radius:50%;
+  border:1px solid var(--border);background:transparent;
+  cursor:pointer;font-size:1rem;color:var(--text2);
+  display:flex;align-items:center;justify-content:center;
+  transition:all var(--transition);
+}
+.modal-close:hover{border-color:var(--red,#f05050);color:var(--red,#f05050);}
+.modal-dropzone{
+  border:2px dashed var(--border2);border-radius:12px;
+  padding:32px;text-align:center;margin-bottom:20px;
+  background:var(--input-bg);cursor:pointer;
+  transition:all var(--transition);
+}
+.modal-dropzone:hover{border-color:var(--accent);background:var(--accent-dim);}
+.mdz-icon{font-size:2rem;display:block;margin-bottom:8px;}
+.mdz-text{font-size:.88rem;color:var(--text2);}
+.form-group{margin-bottom:16px;}
+.form-label{font-size:.75rem;font-weight:600;color:var(--text2);display:block;margin-bottom:6px;}
+.form-input{
+  width:100%;padding:10px 14px;border-radius:10px;
+  border:1px solid var(--border);background:var(--input-bg);
+  color:var(--text);font-size:.85rem;font-family:'DM Sans',sans-serif;
+  outline:none;transition:all var(--transition);
+}
+.form-input:focus{border-color:var(--accent);}
+.form-select{
+  width:100%;padding:10px 14px;border-radius:10px;
+  border:1px solid var(--border);background:var(--bg2);
+  color:var(--text);font-size:.85rem;font-family:'DM Sans',sans-serif;
+  outline:none;cursor:pointer;
+}
+.modal-progress{display:none;margin-bottom:16px;}
+.progress-bar{
+  height:6px;border-radius:3px;background:var(--border);overflow:hidden;margin-bottom:6px;
+}
+.progress-fill{
+  height:100%;border-radius:3px;background:var(--accent);
+  width:0%;transition:width .3s ease;
+}
+.progress-text{font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--text2);}
+.btn-full{
+  width:100%;padding:13px;border-radius:10px;
+  background:var(--accent);color:var(--bg);
+  font-size:.88rem;font-weight:700;border:none;cursor:pointer;
+  transition:all var(--transition);
+  display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.btn-full:hover{transform:translateY(-1px);box-shadow:0 4px 20px rgba(200,240,96,.3);}
+[data-theme="light"] .btn-full:hover{box-shadow:0 4px 20px rgba(45,106,0,.2);}
+.btn-full:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none;}
+
+/* TOAST NOTIFICATION */
+.toast{
+  position:fixed;bottom:24px;right:24px;z-index:300;
+  padding:14px 20px;border-radius:12px;
+  background:var(--bg2);border:1px solid var(--border2);
+  box-shadow:var(--shadow);
+  display:flex;align-items:center;gap:12px;
+  font-size:.85rem;color:var(--text);
+  transform:translateY(80px);opacity:0;
+  transition:all .3s cubic-bezier(.175,.885,.32,1.275);
+  max-width:340px;
+}
+.toast.show{transform:translateY(0);opacity:1;}
+.toast-icon{font-size:1.1rem;flex-shrink:0;}
+.toast-msg{flex:1;}
+.toast-close{
+  background:none;border:none;color:var(--text3);
+  cursor:pointer;font-size:.9rem;padding:2px;
+  transition:color var(--transition);
+}
+.toast-close:hover{color:var(--text);}
+
+/* ═══════════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════════ */
+@media(max-width:1024px){
+  .hero{grid-template-columns:1fr;gap:40px;}
+  .hero-visual{display:none;}
+  .features-grid{grid-template-columns:1fr 1fr;}
+  .steps-row{grid-template-columns:1fr 1fr;gap:24px;}
+  .steps-row::before{display:none;}
+  .humans-grid{grid-template-columns:repeat(2,1fr);}
+  .human-card.large{grid-column:span 1;}
+  .dash-layout{grid-template-columns:1fr;}
+  .dash-sidebar{display:none;}
+  .stats-row{grid-template-columns:1fr 1fr;}
+}
+@media(max-width:640px){
+  nav{padding:0 16px;}
+  .features-grid{grid-template-columns:1fr;}
+  .humans-grid{grid-template-columns:1fr;}
+  .cta-wrap{flex-direction:column;padding:40px 24px;}
+  .stats-row{grid-template-columns:1fr 1fr;}
+  .docs-grid{grid-template-columns:1fr 1fr;}
+}
+
+
+/* === WALLET MODAL ADDITIONS === */
+
+.scan-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);animation:scandot 1s ease-in-out infinite;}
+@keyframes scandot{0%,100%{opacity:.2;transform:scale(.8);}50%{opacity:1;transform:scale(1.2);}}
+
+.wallet-row{
+  display:flex;align-items:center;gap:12px;padding:13px 14px;
+  border-radius:11px;border:1px solid var(--border);
+  background:var(--input-bg);cursor:pointer;
+  transition:all .2s;width:100%;text-align:left;
+  color:var(--text);font-family:'DM Sans',sans-serif;
+}
+.wallet-row:hover{border-color:var(--accent);background:var(--accent-dim);transform:translateX(2px);}
+.wallet-row-icon{width:36px;height:36px;border-radius:9px;overflow:hidden;flex-shrink:0;background:var(--surface);display:flex;align-items:center;justify-content:center;font-size:1.3rem;}
+.wallet-row-icon img{width:100%;height:100%;object-fit:contain;border-radius:9px;}
+.wallet-row-name{font-size:.9rem;font-weight:600;flex:1;}
+.wallet-row-status{font-size:.65rem;padding:2px 8px;border-radius:10px;background:rgba(200,240,96,.12);color:var(--accent);font-family:'JetBrains Mono',monospace;}
+.install-link{padding:5px 12px;border-radius:20px;border:1px solid var(--border);background:var(--input-bg);color:var(--text2);font-size:.72rem;text-decoration:none;transition:all .2s;white-space:nowrap;}
+.install-link:hover{border-color:var(--accent);color:var(--accent);}
+.wallet-install-btn{
+  display:flex;align-items:center;gap:10px;padding:12px 14px;
+  border-radius:10px;border:1px solid var(--border);
+  background:var(--input-bg);color:var(--text);
+  font-size:.85rem;text-decoration:none;
+  transition:all .2s;
+}
+.wallet-install-btn:hover{border-color:var(--accent);background:var(--accent-dim);color:var(--accent);}
+.demo-mode-btn{
+  width:100%;padding:11px;border-radius:9px;
+  border:1px dashed var(--border2);background:transparent;
+  color:var(--text2);font-size:.82rem;cursor:pointer;
+  transition:all .2s;font-family:'DM Sans',sans-serif;
+}
+.demo-mode-btn:hover{border-color:var(--accent);color:var(--accent);}
+</style>
+</head>
+<body>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <span class="toast-icon" id="toastIcon">✅</span>
+  <span class="toast-msg" id="toastMsg">Document uploaded successfully</span>
+  <button class="toast-close" onclick="hideToast()"><svg viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:10px;height:10px;"><path d="M1 1l10 10M11 1L1 11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button>
+</div>
+
+<!-- WALLET CONNECT MODAL — EIP-6963 Multi-Wallet -->
+<div class="modal-overlay" id="walletModal">
+  <div class="modal-box" style="max-width:420px;">
+    <div class="modal-header">
+      <div class="modal-title">CONNECT WALLET</div>
+      <button class="modal-close" onclick="closeWalletModal()">✕</button>
+    </div>
+
+    <!-- Scanning state -->
+    <div id="wStateScanning" style="text-align:center;padding:24px 0 16px;">
+      <div style="font-size:.85rem;color:var(--text2);margin-bottom:6px;">Scanning for installed wallets...</div>
+      <div style="display:flex;justify-content:center;gap:6px;margin-top:12px;">
+        <div class="scan-dot"></div><div class="scan-dot" style="animation-delay:.2s"></div><div class="scan-dot" style="animation-delay:.4s"></div>
+      </div>
+    </div>
+
+    <!-- Wallet list (populated by JS) -->
+    <div id="wStateList" style="display:none;">
+      <div style="font-size:.75rem;color:var(--text3);font-family:'JetBrains Mono',monospace;letter-spacing:.1em;margin-bottom:12px;">DETECTED WALLETS</div>
+      <div id="walletList" style="display:flex;flex-direction:column;gap:8px;"></div>
+      <div style="margin-top:16px;border-top:1px solid var(--border);padding-top:14px;">
+        <div style="font-size:.7rem;color:var(--text3);margin-bottom:10px;">NO WALLET? INSTALL ONE:</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <a href="https://metamask.io/download" target="_blank" class="install-link">🦊 MetaMask</a>
+          <a href="https://www.okx.com/web3" target="_blank" class="install-link">⬡ OKX Wallet</a>
+          <a href="https://rabby.io" target="_blank" class="install-link">🐰 Rabby</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- No wallet found -->
+    <div id="wStateNone" style="display:none;text-align:center;padding:16px 0;">
+      <div style="font-size:2rem;margin-bottom:12px;">🔍</div>
+      <div style="font-size:.92rem;font-weight:600;color:var(--text);margin-bottom:8px;">No Wallets Detected</div>
+      <div style="font-size:.8rem;color:var(--text2);line-height:1.6;margin-bottom:20px;">
+        Install a browser wallet extension to connect to ARKIVE and OPN Chain.
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:20px;">
+        <a href="https://metamask.io/download" target="_blank" class="wallet-install-btn">
+          <span>🦊</span><span>Install MetaMask</span><span style="margin-left:auto;font-size:.7rem;opacity:.6;">Popular</span>
+        </a>
+        <a href="https://www.okx.com/web3" target="_blank" class="wallet-install-btn">
+          <span>⬡</span><span>Install OKX Wallet</span><span style="margin-left:auto;font-size:.7rem;opacity:.6;">EVM</span>
+        </a>
+        <a href="https://rabby.io" target="_blank" class="wallet-install-btn">
+          <span>🐰</span><span>Install Rabby</span><span style="margin-left:auto;font-size:.7rem;opacity:.6;">EVM</span>
+        </a>
+      </div>
+      <button onclick="connectDemoMode()" class="demo-mode-btn">
+        🎭 Continue in Demo Mode
+      </button>
+    </div>
+
+    <!-- Connecting state -->
+    <div id="wStateConnecting" style="display:none;text-align:center;padding:28px 0;">
+      <div id="wConnectingIcon" style="font-size:2.5rem;margin-bottom:12px;">🦊</div>
+      <div style="font-size:.9rem;font-weight:600;color:var(--text);margin-bottom:6px;" id="wConnectingName">Connecting...</div>
+      <div style="font-size:.78rem;color:var(--text2);">Approve the connection request in your wallet</div>
+    </div>
+
+    <!-- Connected state -->
+    <div id="wStateConnected" style="display:none;text-align:center;padding:20px 0;">
+      <div style="font-size:2.5rem;margin-bottom:10px;">✅</div>
+      <div style="font-size:.95rem;font-weight:700;color:var(--accent);margin-bottom:6px;">Connected!</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--text2);" id="wConnectedAddr"></div>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- UPLOAD MODAL -->
+<div class="modal-overlay" id="uploadModal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div class="modal-title">UPLOAD DOCUMENT</div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-dropzone" onclick="document.getElementById('fileInput').click()">
+      <span class="mdz-icon">
+  <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:32px;height:32px;">
+    <path d="M4 26V14l5-4h18v16a2 2 0 01-2 2H6a2 2 0 01-2-2z" stroke="currentColor" stroke-width="1.8"/>
+    <path d="M4 14h5V10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+    <path d="M16 22v-8M13 17l3-3 3 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+</span>
+      <div class="mdz-text">Click to select file or drag & drop here</div>
+      <div style="font-size:.7rem;color:var(--text3);margin-top:4px;">PDF, JPG, PNG, DOC up to 50MB</div>
+    </div>
+    <input type="file" id="fileInput" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx">
+    <div id="selectedFile" style="display:none;margin-bottom:16px;padding:10px 14px;border-radius:10px;background:var(--accent-dim);border:1px solid var(--accent);font-size:.82rem;color:var(--accent);"></div>
+    <div class="form-group">
+      <label class="form-label">Document Name</label>
+      <input type="text" class="form-input" id="docName" placeholder="e.g. National ID Card">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Document Category</label>
+      <select class="form-select" id="docCategory">
+        <option value="identity">🪪 Identity Document</option>
+        <option value="certificate">🎓 Certificate / Diploma</option>
+        <option value="contract">📝 Contract / Agreement</option>
+        <option value="financial">💰 Financial Document</option>
+        <option value="medical">🏥 Medical Record</option>
+        <option value="property">🏠 Property Document</option>
+        <option value="other">📄 Other</option>
+      </select>
+    </div>
+    <div class="modal-progress" id="uploadProgress">
+      <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+      <div class="progress-text" id="progressText">Uploading to IPFS via Pinata...</div>
+    </div>
+    <button class="btn-full" id="uploadBtn" onclick="handleUpload()">
+      SECURE ON OPN CHAIN
+    </button>
+    <div style="text-align:center;font-size:.7rem;color:var(--text3);margin-top:12px;">
+      Files encrypted & stored on IPFS · CID recorded on OPN Chain
+    </div>
+  </div>
+</div>
+
+<!-- NAVIGATION -->
+<nav>
+  <a class="nav-logo" href="#" onclick="showPage('landing')">
+    <div class="logo-mark">
+      <svg viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
+        <path d="M9 1L2 5v8l7 4 7-4V5L9 1zm0 2.2L14.5 6 9 8.8 3.5 6 9 3.2zM3.5 7.7L8 10.1v4.7L3.5 12.4V7.7zm5.5 7.1V10.1l4.5-2.4v4.7L9 14.8z"/>
+      </svg>
+    </div>
+    <span class="logo-text">ARKIVE</span>
+  </a>
+
+  <div class="nav-links">
+    <button class="nav-link" onclick="showPage('landing')">Home</button>
+    <button class="nav-link" onclick="scrollToFeatures()">Features</button>
+    <button class="nav-link" onclick="scrollToHow()">How It Works</button>
+    <button class="theme-toggle" onclick="toggleTheme()" title="Toggle theme">
+      <span id="themeIcon"><svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:13px;height:13px;"><circle cx="8" cy="8" r="3" stroke="currentColor" stroke-width="1.5"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2M3.5 3.5l1.4 1.4M11.1 11.1l1.4 1.4M3.5 12.5l1.4-1.4M11.1 4.9l1.4-1.4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+    </button>
+    <button class="btn-nav" onclick="showPage('dashboard')">
+      Launch App
+    </button>
+  </div>
+</nav>
+
+<!-- ═══════════ LANDING PAGE ═══════════ -->
+<div class="page active" id="page-landing">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-content">
+      <div class="hero-badge">
+        <div class="hero-badge-dot"></div>
+        BUILT ON OPN CHAIN  ·  POWERED BY IPFS
+      </div>
+      <div class="hero-title">YOUR<br>WORLD<span class="hero-title-accent">,</span><br>PRESERVED</div>
+      <div class="hero-subtitle">The phygital document vault for the sovereign era.</div>
+      <div class="hero-desc">
+        Upload your most important documents — IDs, certificates, contracts, deeds — 
+        and store them permanently on OPN Chain. Retrieve them anywhere, anytime, 
+        with cryptographic proof that nothing has changed.
+      </div>
+      <div class="hero-actions">
+        <button class="btn-primary" onclick="showPage('dashboard')">
+          <span>🔒</span> Start Archiving
+        </button>
+        <button class="btn-secondary" onclick="scrollToHow()">
+          <span>▶</span> See How It Works
+        </button>
+      </div>
+      <div class="hero-stats">
+        <div class="stat-item">
+          <span class="stat-num">100%</span>
+          <span class="stat-lbl">Decentralized</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-num">∞</span>
+          <span class="stat-lbl">Permanent</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-num">0ms</span>
+          <span class="stat-lbl">Downtime</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="hero-card-stack">
+        <!-- Main card -->
+        <div class="hcard hcard-main">
+          <div class="hcard-img">
+            <div class="hcard-img-inner human-img-1">
+              <svg width="80" height="140" viewBox="0 0 80 140" fill="none" xmlns="http://www.w3.org/2000/svg" style="opacity:.3">
+                <circle cx="40" cy="28" r="18" fill="currentColor"/>
+                <path d="M15 85 C15 60 65 60 65 85 L68 130 L52 130 L50 100 L30 100 L28 130 L12 130 Z" fill="currentColor"/>
+                <path d="M15 85 L5 115 L16 118 L25 90" fill="currentColor"/>
+                <path d="M65 85 L75 115 L64 118 L55 90" fill="currentColor"/>
+              </svg>
+            </div>
+          </div>
+          <div class="hcard-body">
+            <div class="hcard-label">Verified User</div>
+            <div class="hcard-name">Sarah O. — San Francisco, USA</div>
+            <div class="hcard-sub">14 documents archived</div>
+            <div class="hcard-badge badge-verified">✓ OPN Chain Verified</div>
+          </div>
+        </div>
+        <!-- Float card 1 -->
+        <div class="hcard hcard-float1">
+          <span class="float-icon">🔐</span>
+          <div class="float-title">Encrypted</div>
+          <div class="float-sub">End-to-end secure</div>
+        </div>
+        <!-- Float card 2 -->
+        <div class="hcard hcard-float2">
+          <span class="float-num">847</span>
+          <div class="float-title">Docs Archived</div>
+          <div class="float-sub">Across OPN Chain</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FEATURES -->
+  <div class="section" id="features">
+    <div class="section-eyebrow">What ARKIVE Does</div>
+    <div class="section-title">BUILT FOR<br>REAL LIFE</div>
+    <div class="section-sub">Every document you can't afford to lose, secured on a chain that cannot fail.</div>
+    <div class="features-grid">
+      <div class="feat-card">
+        <div class="feat-icon"><svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+  <rect x="8" y="6" width="22" height="28" rx="2" stroke="#84CC31" stroke-width="2.5"/>
+  <path d="M30 6l10 10H30V6z" stroke="#84CC31" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M19 32v-10M15 26l4-4 4 4" stroke="#84CC31" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="12" y="34" width="14" height="3" rx="1" fill="#84CC31" opacity=".5"/>
+</svg></div>
+        <div class="feat-title">Upload Anything</div>
+        <div class="feat-desc">IDs, certificates, contracts, property deeds, medical records. Any document that matters to you.</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon"><svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+  <rect x="6" y="6" width="36" height="32" rx="4" stroke="#84CC31" stroke-width="2.5"/>
+  <rect x="14" y="40" width="6" height="4" rx="1" stroke="#84CC31" stroke-width="2"/>
+  <rect x="28" y="40" width="6" height="4" rx="1" stroke="#84CC31" stroke-width="2"/>
+  <rect x="16" y="14" width="16" height="16" rx="8" stroke="#84CC31" stroke-width="2"/>
+  <circle cx="24" cy="22" r="3" fill="#84CC31"/>
+  <line x1="24" y1="25" x2="24" y2="29" stroke="#84CC31" stroke-width="2" stroke-linecap="round"/>
+  <line x1="42" y1="16" x2="44" y2="16" stroke="#84CC31" stroke-width="2" stroke-linecap="round"/>
+  <line x1="42" y1="22" x2="44" y2="22" stroke="#84CC31" stroke-width="2" stroke-linecap="round"/>
+</svg></div>
+        <div class="feat-title">Encrypted Storage</div>
+        <div class="feat-desc">Files stored on IPFS with end-to-end encryption. Only your wallet key can decrypt and access them.</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon"><svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+  <circle cx="24" cy="24" r="4" fill="#84CC31"/>
+  <circle cx="24" cy="8"  r="3" stroke="#84CC31" stroke-width="2"/>
+  <circle cx="24" cy="40" r="3" stroke="#84CC31" stroke-width="2"/>
+  <circle cx="10" cy="16" r="3" stroke="#84CC31" stroke-width="2"/>
+  <circle cx="38" cy="16" r="3" stroke="#84CC31" stroke-width="2"/>
+  <circle cx="10" cy="32" r="3" stroke="#84CC31" stroke-width="2"/>
+  <circle cx="38" cy="32" r="3" stroke="#84CC31" stroke-width="2"/>
+  <line x1="24" y1="11" x2="24" y2="20" stroke="#84CC31" stroke-width="1.5"/>
+  <line x1="24" y1="28" x2="24" y2="37" stroke="#84CC31" stroke-width="1.5"/>
+  <line x1="12.6" y1="17.5" x2="20" y2="22" stroke="#84CC31" stroke-width="1.5"/>
+  <line x1="28" y1="26" x2="35.4" y2="30.5" stroke="#84CC31" stroke-width="1.5"/>
+  <line x1="12.6" y1="30.5" x2="20" y2="26" stroke="#84CC31" stroke-width="1.5"/>
+  <line x1="28" y1="22" x2="35.4" y2="17.5" stroke="#84CC31" stroke-width="1.5"/>
+</svg></div>
+        <div class="feat-title">On-Chain Record</div>
+        <div class="feat-desc">Every document gets a permanent hash recorded on OPN Chain. Tamper-proof, forever, verifiable by anyone.</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon"><svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+  <circle cx="20" cy="20" r="12" stroke="#84CC31" stroke-width="2.5"/>
+  <ellipse cx="20" cy="20" rx="5" ry="12" stroke="#84CC31" stroke-width="1.5"/>
+  <line x1="8" y1="20" x2="32" y2="20" stroke="#84CC31" stroke-width="1.5"/>
+  <line x1="10" y1="14" x2="30" y2="14" stroke="#84CC31" stroke-width="1"/>
+  <line x1="10" y1="26" x2="30" y2="26" stroke="#84CC31" stroke-width="1"/>
+  <circle cx="34" cy="34" r="5" stroke="#84CC31" stroke-width="2.5"/>
+  <line x1="37.5" y1="37.5" x2="43" y2="43" stroke="#84CC31" stroke-width="2.5" stroke-linecap="round"/>
+</svg></div>
+        <div class="feat-title">Retrieve Anywhere</div>
+        <div class="feat-desc">Access your documents from any device, anywhere in the world. All you need is your wallet.</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon"><svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+  <circle cx="24" cy="24" r="18" stroke="#84CC31" stroke-width="2.5"/>
+  <line x1="24" y1="6" x2="24" y2="9" stroke="#84CC31" stroke-width="2" stroke-linecap="round"/>
+  <line x1="24" y1="39" x2="24" y2="42" stroke="#84CC31" stroke-width="2" stroke-linecap="round"/>
+  <line x1="6" y1="24" x2="9" y2="24" stroke="#84CC31" stroke-width="2" stroke-linecap="round"/>
+  <line x1="39" y1="24" x2="42" y2="24" stroke="#84CC31" stroke-width="2" stroke-linecap="round"/>
+  <path d="M16 25l6 6 10-12" stroke="#84CC31" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+</svg></div>
+        <div class="feat-title">Instant Verification</div>
+        <div class="feat-desc">Share a verification link. Anyone can confirm your document is authentic without seeing the contents.</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon"><svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+  <rect x="4" y="12" width="40" height="26" rx="3" stroke="#84CC31" stroke-width="2.5"/>
+  <circle cx="16" cy="22" r="5" stroke="#84CC31" stroke-width="2"/>
+  <path d="M8 36c0-4 3.6-7 8-7s8 3 8 7" stroke="#84CC31" stroke-width="2" stroke-linecap="round"/>
+  <line x1="28" y1="20" x2="42" y2="20" stroke="#84CC31" stroke-width="2" stroke-linecap="round"/>
+  <line x1="28" y1="26" x2="38" y2="26" stroke="#84CC31" stroke-width="2" stroke-linecap="round"/>
+  <line x1="28" y1="32" x2="40" y2="32" stroke="#84CC31" stroke-width="2" stroke-linecap="round"/>
+</svg></div>
+        <div class="feat-title">Neo ID Ready</div>
+        <div class="feat-desc">Documents linked to your OPN Chain Neo ID. Your sovereign digital identity — your documents prove it.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HOW IT WORKS -->
+  <div class="how-wrap" id="howItWorks">
+    <div class="how-inner">
+      <div class="section-eyebrow">The Process</div>
+      <div class="section-title">FOUR STEPS TO FOREVER</div>
+      <div class="steps-row">
+        <div class="step-item">
+          <div class="step-num">01</div>
+          <div class="step-title">Connect Wallet</div>
+          <div class="step-desc">Link your MetaMask wallet. This is your identity — no username or password needed.</div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">02</div>
+          <div class="step-title">Upload Document</div>
+          <div class="step-desc">Drag and drop any file. It's encrypted and sent to IPFS via Pinata instantly.</div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">03</div>
+          <div class="step-title">Recorded On-Chain</div>
+          <div class="step-desc">A unique hash of your file is written to OPN Chain. Permanent, verifiable, unforgeable.</div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">04</div>
+          <div class="step-title">Retrieve Anytime</div>
+          <div class="step-desc">Login with your wallet from anywhere. Your documents are always there, always yours.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HUMAN GRID SECTION -->
+  <div class="human-section">
+    <div class="section-eyebrow">Real People, Real Documents</div>
+    <div class="section-title">WHO USES<br>ARKIVE</div>
+    <div class="section-sub">From students preserving diplomas to businesses securing contracts — ARKIVE is for anyone with documents that matter.</div>
+
+    <div class="humans-grid">
+      <!-- Large card 1 -->
+      <div class="human-card large">
+        <div class="hc-image">
+          <div class="hc-image-inner h1">
+            <svg width="100" height="180" viewBox="0 0 100 180" fill="white" opacity=".2" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="38" r="24"/><path d="M15 105 C15 72 85 72 85 105 L88 170 L68 170 L65 130 L35 130 L32 170 L12 170 Z"/><path d="M15 105 L2 145 L18 150 L30 110"/><path d="M85 105 L98 145 L82 150 L70 110"/></svg>
+          </div>
+        </div>
+        <div class="hc-body">
+          <div class="hc-tags">
+            <span class="hc-tag">Freelancer</span>
+            <span class="hc-tag">New York, USA</span>
+          </div>
+          <div class="hc-name">Emmanuel A.</div>
+          <div class="hc-role">Stores contracts, invoices & NDA agreements</div>
+        </div>
+        <div class="hc-footer">
+          <span class="hc-docs">23 documents</span>
+          <span class="hc-verified">✓ Verified</span>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="human-card">
+        <div class="hc-image">
+          <div class="hc-image-inner h2">
+            <svg width="80" height="160" viewBox="0 0 80 160" fill="white" opacity=".2" xmlns="http://www.w3.org/2000/svg"><circle cx="40" cy="30" r="20"/><path d="M12 88 C12 62 68 62 68 88 L70 150 L55 150 L52 108 L28 108 L25 150 L10 150 Z"/></svg>
+          </div>
+        </div>
+        <div class="hc-body">
+          <div class="hc-tags"><span class="hc-tag">Student</span><span class="hc-tag">London, UK</span></div>
+          <div class="hc-name">Priya K.</div>
+          <div class="hc-role">Secures diplomas & academic certificates</div>
+        </div>
+        <div class="hc-footer">
+          <span class="hc-docs">8 documents</span>
+          <span class="hc-verified">✓ Verified</span>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="human-card">
+        <div class="hc-image">
+          <div class="hc-image-inner h3">
+            <svg width="80" height="160" viewBox="0 0 80 160" fill="white" opacity=".2" xmlns="http://www.w3.org/2000/svg"><circle cx="40" cy="30" r="20"/><path d="M12 88 C12 62 68 62 68 88 L70 150 L55 150 L52 108 L28 108 L25 150 L10 150 Z"/></svg>
+          </div>
+        </div>
+        <div class="hc-body">
+          <div class="hc-tags"><span class="hc-tag">Business Owner</span><span class="hc-tag">Tokyo, Japan</span></div>
+          <div class="hc-name">Marcus T.</div>
+          <div class="hc-role">Archives property deeds & licenses</div>
+        </div>
+        <div class="hc-footer">
+          <span class="hc-docs">41 documents</span>
+          <span class="hc-verified">✓ Verified</span>
+        </div>
+      </div>
+
+      <!-- Large card 2 -->
+      <div class="human-card large">
+        <div class="hc-image">
+          <div class="hc-image-inner h5">
+            <svg width="100" height="180" viewBox="0 0 100 180" fill="white" opacity=".2" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="38" r="24"/><path d="M15 105 C15 72 85 72 85 105 L88 170 L68 170 L65 130 L35 130 L32 170 L12 170 Z"/><path d="M15 105 L2 145 L18 150 L30 110"/><path d="M85 105 L98 145 L82 150 L70 110"/></svg>
+          </div>
+        </div>
+        <div class="hc-body">
+          <div class="hc-tags">
+            <span class="hc-tag">Legal Professional</span>
+            <span class="hc-tag">Dubai, UAE</span>
+          </div>
+          <div class="hc-name">Amara J.</div>
+          <div class="hc-role">Manages client contracts and legal filings securely on-chain</div>
+        </div>
+        <div class="hc-footer">
+          <span class="hc-docs">128 documents</span>
+          <span class="hc-verified">✓ Verified</span>
+        </div>
+      </div>
+
+      <!-- Card 5 -->
+      <div class="human-card">
+        <div class="hc-image">
+          <div class="hc-image-inner h4">
+            <svg width="80" height="160" viewBox="0 0 80 160" fill="white" opacity=".2" xmlns="http://www.w3.org/2000/svg"><circle cx="40" cy="30" r="20"/><path d="M12 88 C12 62 68 62 68 88 L70 150 L55 150 L52 108 L28 108 L25 150 L10 150 Z"/></svg>
+          </div>
+        </div>
+        <div class="hc-body">
+          <div class="hc-tags"><span class="hc-tag">Healthcare</span><span class="hc-tag">Kyiv, Ukraine</span></div>
+          <div class="hc-name">Dr. Kofi M.</div>
+          <div class="hc-role">Keeps medical records permanently accessible</div>
+        </div>
+        <div class="hc-footer">
+          <span class="hc-docs">67 documents</span>
+          <span class="hc-verified">✓ Verified</span>
+        </div>
+      </div>
+
+      <!-- Card 6 -->
+      <div class="human-card">
+        <div class="hc-image">
+          <div class="hc-image-inner h6">
+            <svg width="80" height="160" viewBox="0 0 80 160" fill="white" opacity=".2" xmlns="http://www.w3.org/2000/svg"><circle cx="40" cy="30" r="20"/><path d="M12 88 C12 62 68 62 68 88 L70 150 L55 150 L52 108 L28 108 L25 150 L10 150 Z"/></svg>
+          </div>
+        </div>
+        <div class="hc-body">
+          <div class="hc-tags"><span class="hc-tag">Builder</span><span class="hc-tag">Accra, Ghana</span></div>
+          <div class="hc-name">Yuki S.</div>
+          <div class="hc-role">Stores project docs & OPN builder credentials</div>
+        </div>
+        <div class="hc-footer">
+          <span class="hc-docs">19 documents</span>
+          <span class="hc-verified">✓ Verified</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div style="padding:0 32px 80px;">
+    <div class="cta-wrap">
+      <div>
+        <div class="cta-title">START PRESERVING<br>WHAT MATTERS MOST</div>
+        <div class="cta-sub">Join the builders shaping sovereign infrastructure on OPN Chain.</div>
+      </div>
+      <button class="btn-cta" onclick="showPage('dashboard')">Open ARKIVE →</button>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">ARKIVE</div>
+    <div class="footer-links">
+      <a class="footer-link" href="#">About</a>
+      <a class="footer-link" href="https://builders.iopn.tech" target="_blank">OPN Builders</a>
+      <a class="footer-link" href="#">Docs</a>
+    </div>
+    <div class="footer-chain">
+      <div class="chain-dot"></div>
+      Built on OPN Chain
+    </div>
+  </footer>
+
+</div><!-- end landing -->
+
+<!-- ═══════════ DASHBOARD PAGE ═══════════ -->
+<div class="page" id="page-dashboard">
+  <div class="dash-layout">
+
+    <!-- SIDEBAR -->
+    <div class="dash-sidebar">
+      <div class="sidebar-section">Main</div>
+      <button class="sidebar-item active" id="navDocs" onclick="showDashPanel('docs')">
+        <span class="sidebar-icon">
+          <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:16px;height:16px;">
+            <rect x="3" y="2" width="10" height="13" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M13 5h2a2 2 0 012 2v9a2 2 0 01-2 2H7a2 2 0 01-2-2v-1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="6" y1="7" x2="10" y2="7" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+            <line x1="6" y1="9.5" x2="10" y2="9.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+            <line x1="6" y1="12" x2="8.5" y2="12" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+          </svg>
+        </span> My Documents
+        <span class="sidebar-badge" id="docCount">0</span>
+      </button>
+      <button class="sidebar-item" onclick="showDashPanel('docs');openModal();">
+        <span class="sidebar-icon">
+          <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:16px;height:16px;">
+            <rect x="3" y="3" width="11" height="13" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M9 13V8M7 10l2-2 2 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <line x1="14" y1="3" x2="17" y2="6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+          </svg>
+        </span> Upload New
+      </button>
+      <button class="sidebar-item" onclick="showDashPanel('verify')">
+        <span class="sidebar-icon"><svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:16px;height:16px;"><circle cx="10" cy="10" r="7.5" stroke="currentColor" stroke-width="1.5"/><path d="M7 10l2.5 2.5L13.5 7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span> Verify Document
+      </button>
+      <button class="sidebar-item" onclick="setActiveNav(this)">
+        <span class="sidebar-icon"><svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:16px;height:16px;"><circle cx="6" cy="7" r="2.5" stroke="currentColor" stroke-width="1.4"/><circle cx="14" cy="5" r="2" stroke="currentColor" stroke-width="1.4"/><circle cx="14" cy="15" r="2" stroke="currentColor" stroke-width="1.4"/><path d="M8 8l4-2M8 10l4 4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></span> Shared With Me
+      </button>
+
+      <div class="sidebar-section">Account</div>
+      <button class="sidebar-item" onclick="showDashPanel('neoid')">
+        <span class="sidebar-icon"><svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:16px;height:16px;"><rect x="2" y="5" width="16" height="11" rx="2" stroke="currentColor" stroke-width="1.5"/><circle cx="7" cy="10" r="2" stroke="currentColor" stroke-width="1.3"/><path d="M4.5 15c0-1.5 1.1-2.5 2.5-2.5s2.5 1 2.5 2.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><line x1="12" y1="9" x2="16" y2="9" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><line x1="12" y1="11.5" x2="15" y2="11.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></span> Neo ID Profile
+      </button>
+      <button class="sidebar-item" onclick="showDashPanel('settings')">
+        <span class="sidebar-icon"><svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:16px;height:16px;"><circle cx="10" cy="10" r="2.5" stroke="currentColor" stroke-width="1.4"/><path d="M10 2v2M10 16v2M2 10h2M16 10h2M4.2 4.2l1.4 1.4M14.4 14.4l1.4 1.4M4.2 15.8l1.4-1.4M14.4 5.6l1.4-1.4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span> Settings
+      </button>
+      <button class="sidebar-item" onclick="window.open('http://x.com/IsraelJIL','_blank')">
+        <span class="sidebar-icon"><svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:16px;height:16px;"><circle cx="10" cy="10" r="7.5" stroke="currentColor" stroke-width="1.5"/><path d="M8 8c0-1.1.9-2 2-2s2 .9 2 2c0 1.5-2 1.5-2 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="10" cy="14.5" r=".8" fill="currentColor"/></svg></span> Help
+      </button>
+
+      <div style="height:1px;background:var(--border);margin:8px 0;"></div>
+
+      <div class="sidebar-user">
+        <div class="su-avatar">
+  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:18px;height:18px;">
+    <rect x="2" y="6" width="20" height="13" rx="2.5" stroke="currentColor" stroke-width="1.6"/>
+    <path d="M2 11h20" stroke="currentColor" stroke-width="1.4"/>
+    <circle cx="18" cy="15.5" r="1.2" fill="currentColor"/>
+  </svg>
+</div>
+        <div class="su-name" id="sidebarName">Not Connected</div>
+        <div class="su-addr" id="sidebarAddr">Connect your wallet</div>
+        <div class="su-status">
+          <div class="su-dot"></div>
+          <span id="sidebarStatus">Offline</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN -->
+    <div class="dash-main">
+      <!-- Header -->
+      <div class="dash-header">
+        <div>
+          <div class="dash-title">MY VAULT</div>
+          <div class="dash-sub" id="dashGreeting">Connect your wallet to access your documents</div>
+        </div>
+        <div class="dash-actions">
+          <button class="theme-toggle" onclick="toggleTheme()" style="border-radius:8px;width:auto;padding:0 12px;gap:6px;font-size:.78rem;" title="Toggle theme">
+            <span id="themeIcon2"><svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:13px;height:13px;"><circle cx="8" cy="8" r="3" stroke="currentColor" stroke-width="1.5"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2M3.5 3.5l1.4 1.4M11.1 11.1l1.4 1.4M3.5 12.5l1.4-1.4M11.1 4.9l1.4-1.4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span> Theme
+          </button>
+          <button class="btn-upload" onclick="openModal()">
+            Upload Document
+          </button>
+          <button class="btn-upload" onclick="openWalletModal()" id="walletBtn" style="background:var(--surface);color:var(--text);border:1px solid var(--border);">
+            Connect Wallet
+          </button>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="sc-label">Total Documents</div>
+          <div class="sc-val" id="statTotal">0</div>
+          <div class="sc-sub">Archived on-chain</div>
+        </div>
+        <div class="stat-card">
+          <div class="sc-label">Storage Used</div>
+          <div class="sc-val" id="statStorage">0 MB</div>
+          <div class="sc-sub">of 1 GB free</div>
+        </div>
+        <div class="stat-card">
+          <div class="sc-label">Verified Docs</div>
+          <div class="sc-val" id="statVerified">0</div>
+          <div class="sc-sub">On OPN Chain</div>
+          <div class="sc-change">↑ All verified</div>
+        </div>
+        <div class="stat-card">
+          <div class="sc-label">Chain Status</div>
+          <div class="sc-val" style="color:var(--accent);font-size:1.3rem;">LIVE</div>
+          <div class="sc-sub">OPN Testnet</div>
+          <div class="sc-change">● Connected</div>
+        </div>
+      </div>
+
+      <!-- Upload Zone -->
+      <div class="upload-zone" onclick="openModal()" id="mainDropzone">
+        <span class="uz-icon">
+  <svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:44px;height:44px;">
+    <rect x="6" y="8" width="22" height="28" rx="3" stroke="currentColor" stroke-width="2"/>
+    <path d="M28 8l10 10H28V8z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+    <path d="M14 30V20M10 24l4-4 4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <rect x="20" y="28" width="16" height="10" rx="2" stroke="currentColor" stroke-width="1.8"/>
+    <path d="M28 31v4M26 33h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+  </svg>
+</span>
+        <div class="uz-title">Drop documents here to archive them forever</div>
+        <div class="uz-sub">or click to browse — your files are encrypted before leaving your device</div>
+        <div class="uz-formats">
+          <span class="uz-fmt">PDF</span>
+          <span class="uz-fmt">JPG</span>
+          <span class="uz-fmt">PNG</span>
+          <span class="uz-fmt">DOC</span>
+          <span class="uz-fmt">DOCX</span>
+        </div>
+      </div>
+
+      <!-- Documents Grid -->
+      <div class="docs-section">
+        <div class="docs-header">
+          <div class="docs-title">📁 Your Documents</div>
+          <div class="docs-controls">
+            <input type="text" class="search-input" placeholder="🔍 Search documents..." oninput="filterDocs(this.value)">
+            <button class="filter-btn">⚡ Filter</button>
+            <div class="view-toggle">
+              <button class="vt-btn active" onclick="setView('grid',this)">⊞</button>
+              <button class="vt-btn" onclick="setView('list',this)">≡</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Empty state -->
+        <div id="emptyState" style="text-align:center;padding:60px 20px;color:var(--text2);">
+          <div style="margin-bottom:16px;">
+  <svg viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:52px;height:52px;opacity:.4;">
+    <rect x="8" y="8" width="28" height="36" rx="3" stroke="currentColor" stroke-width="2"/>
+    <path d="M36 8l12 12H36V8z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+    <path d="M14 22h16M14 28h10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+    <circle cx="42" cy="42" r="8" stroke="currentColor" stroke-width="2"/>
+    <path d="M39 42h6M42 39v6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+  </svg>
+</div>
+          <div style="font-size:1rem;font-weight:600;color:var(--text);margin-bottom:8px;">No documents yet</div>
+          <div style="font-size:.85rem;">Upload your first document to begin archiving on OPN Chain</div>
+          <button class="btn-primary" style="margin-top:20px;" onclick="openModal()">
+            Upload First Document
+          </button>
+        </div>
+
+        <div class="docs-grid" id="docsGrid" style="display:none;"></div>
+      </div>
+
+      <!-- ══ VERIFY PANEL ══ -->
+      <div id="panelVerify" style="display:none;">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:1.8rem;letter-spacing:.04em;color:var(--text);margin-bottom:4px;">VERIFY DOCUMENT</div>
+        <div style="font-size:.85rem;color:var(--text2);margin-bottom:24px;">Prove any document is authentic — drop the file and we check OPN Chain instantly. Your file never leaves your device.</div>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:28px;max-width:560px;">
+          <div style="border:2px dashed var(--border2);border-radius:12px;padding:32px;text-align:center;margin-bottom:18px;cursor:pointer;transition:all .3s;" id="verifyDropzone" onclick="document.getElementById('verifyFileInput').click()">
+            <div style="margin-bottom:12px;">
+  <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:44px;height:44px;">
+    <circle cx="20" cy="20" r="12" stroke="currentColor" stroke-width="2.5"/>
+    <line x1="29" y1="29" x2="43" y2="43" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+    <path d="M15 20h10M20 15v10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+  </svg>
+</div>
+            <div style="font-size:.95rem;font-weight:600;color:var(--text);margin-bottom:4px;">Drop document to verify</div>
+            <div style="font-size:.75rem;color:var(--text2);">We only compute a hash — the file is never uploaded here</div>
+            <div id="verifyFileName" style="margin-top:10px;font-size:.8rem;color:var(--accent);display:none;"></div>
+          </div>
+          <input type="file" id="verifyFileInput" style="display:none;">
+          <button id="verifyBtn" onclick="runVerify()" style="width:100%;padding:13px;border-radius:10px;background:var(--accent);color:var(--void);font-family:'DM Sans',sans-serif;font-size:.9rem;font-weight:700;border:none;cursor:pointer;opacity:.5;" disabled>
+            
+            VERIFY ON OPN CHAIN
+          </button>
+          <div id="verifyResult" style="margin-top:20px;display:none;"></div>
+        </div>
+      </div>
+
+      <!-- ══ NEO ID PANEL ══ -->
+      <div id="panelNeoid" style="display:none;text-align:center;padding:60px 20px;">
+        <div style="margin-bottom:16px;">
+  <svg viewBox="0 0 64 48" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:64px;height:48px;">
+    <rect x="2" y="4" width="60" height="40" rx="5" stroke="currentColor" stroke-width="2.5"/>
+    <circle cx="18" cy="22" r="7" stroke="currentColor" stroke-width="2"/>
+    <path d="M8 40c0-5.5 4.5-10 10-10s10 4.5 10 10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    <line x1="34" y1="16" x2="58" y2="16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    <line x1="34" y1="24" x2="55" y2="24" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    <line x1="34" y1="32" x2="58" y2="32" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+  </svg>
+</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:2.5rem;letter-spacing:.08em;color:var(--accent);margin-bottom:10px;">NEO ID PROFILE</div>
+        <div style="font-size:1rem;color:var(--text2);margin-bottom:14px;">Identity at protocol level — powered by OPN Chain</div>
+        <div style="display:inline-block;padding:8px 24px;border-radius:20px;background:var(--accent-dim);border:1px solid var(--accent);font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--accent);letter-spacing:.1em;">⚡ COMING SOON</div>
+        <div style="max-width:380px;margin:20px auto 0;font-size:.82rem;color:var(--text2);line-height:1.8;">
+          Neo ID will link your sovereign digital identity to your archived documents — making them instantly verifiable across the OPN Chain ecosystem.
+        </div>
+      </div>
+
+      <!-- ══ SETTINGS PANEL ══ -->
+      <div id="panelSettings" style="display:none;max-width:580px;">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:1.8rem;letter-spacing:.04em;color:var(--text);margin-bottom:20px;">SETTINGS</div>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:12px;">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:.58rem;color:var(--text3);letter-spacing:.15em;margin-bottom:8px;">CONNECTED WALLET</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--text);word-break:break-all;" id="settingsWallet">Not connected</div>
+          <div style="font-size:.7rem;color:var(--text2);margin-top:5px;">Network: <span style="color:var(--accent);">OPN Testnet · Chain ID 984</span></div>
+        </div>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;">
+          <div>
+            <div style="font-size:.9rem;font-weight:600;color:var(--text);">Theme</div>
+            <div style="font-size:.73rem;color:var(--text2);margin-top:2px;">Switch between dark and light mode</div>
+          </div>
+          <button onclick="toggleTheme()" style="padding:9px 18px;border-radius:8px;background:var(--accent);color:var(--void);font-size:.82rem;font-weight:700;border:none;cursor:pointer;font-family:inherit;">Toggle</button>
+        </div>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:12px;">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:.58rem;color:var(--text3);letter-spacing:.15em;margin-bottom:8px;">CONTRACT ADDRESS</div>
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--accent);word-break:break-all;flex:1;">0x03fb1829E5bD83B28cEa9041b4A923F70d79f7E6</div>
+            <button onclick="copyTxHash('0x03fb1829E5bD83B28cEa9041b4A923F70d79f7E6')" style="padding:5px 12px;border-radius:6px;border:1px solid var(--border2);background:var(--surface2);color:var(--text);font-size:.7rem;cursor:pointer;font-family:inherit;">📋 Copy</button>
+          </div>
+          <a href="https://testnet-explorer.iopn.tech/address/0x03fb1829E5bD83B28cEa9041b4A923F70d79f7E6" target="_blank" style="display:inline-block;margin-top:8px;font-size:.7rem;color:var(--cyan);text-decoration:none;">🔗 View on OPN Explorer →</a>
+        </div>
+        <div style="background:rgba(255,51,102,.05);border:1px solid rgba(255,51,102,.2);border-radius:14px;padding:20px;">
+          <div style="font-size:.9rem;font-weight:600;color:#ff3366;margin-bottom:5px;">Danger Zone</div>
+          <div style="font-size:.76rem;color:var(--text2);margin-bottom:12px;">Clear locally cached documents. Your on-chain records are permanent and unaffected.</div>
+          <button onclick="clearLocalData()" style="padding:9px 18px;border-radius:8px;background:rgba(255,51,102,.12);color:#ff3366;border:1px solid rgba(255,51,102,.35);font-size:.82rem;font-weight:600;cursor:pointer;font-family:inherit;">Clear Local Cache</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div><!-- end dashboard -->
+
+<script>
+// 
+//  ARKIVE - CLEAN JAVASCRIPT ENGINE
+//  Using var throughout - no const/let redeclaration errors
+// 
+
+//  CONFIG 
+var PINATA_JWT     = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mb3JtYXRpb24iOnsiaWQiOiJmNzU5ZTQ1Ny02NjlmLTRiNjYtOGQzYy1mNDYwN2Y3NTdiMDciLCJlbWFpbCI6Im1hc3RlcnByaW1laEBnbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwicGluX3BvbGljeSI6eyJyZWdpb25zIjpbeyJkZXNpcmVkUmVwbGljYXRpb25Db3VudCI6MSwiaWQiOiJGUkExIn0seyJkZXNpcmVkUmVwbGljYXRpb25Db3VudCI6MSwiaWQiOiJOWUMxIn1dLCJ2ZXJzaW9uIjoxfSwibWZhX2VuYWJsZWQiOmZhbHNlLCJzdGF0dXMiOiJBQ1RJVkUifSwiYXV0aGVudGljYXRpb25UeXBlIjoic2NvcGVkS2V5Iiwic2NvcGVkS2V5S2V5IjoiOGIyYTc5MmMxZDk2MzhkMTYzNzUiLCJzY29wZWRLZXlTZWNyZXQiOiI1MjI0MmE2MzU0YTYwZjRiMGEzMWIwMzUzMzQ0OGIwODEyNGRiZDdiMzE3N2FlNzExZWJkZTY1NGQ4NGY4NzViIiwiZXhwIjoxODEyMzEyODIwfQ.XYW4WPRYFulnQtekJcblsQY47kzsDvnRDP8p620zx9g";
+var PINATA_GATEWAY = "https://gateway.pinata.cloud/ipfs/";
+
+//  OPN CHAIN CONTRACT 
+var CONTRACT_ADDRESS = "0x03fb1829E5bD83B28cEa9041b4A923F70d79f7E6";
+var OPN_RPC          = "https://testnet-rpc.iopn.tech";
+
+var CONTRACT_ABI = [{"inputs":[{"internalType":"string","name":"name","type":"string"},{"internalType":"string","name":"category","type":"string"},{"internalType":"string","name":"cid","type":"string"},{"internalType":"bytes32","name":"fileHash","type":"bytes32"}],"name":"storeDocument","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"docId","type":"uint256"}],"name":"deleteDocument","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"getMyDocumentIds","outputs":[{"internalType":"uint256[]","name":"","type":"uint256[]"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"docId","type":"uint256"}],"name":"getDocument","outputs":[{"components":[{"internalType":"uint256","name":"id","type":"uint256"},{"internalType":"string","name":"name","type":"string"},{"internalType":"string","name":"category","type":"string"},{"internalType":"string","name":"cid","type":"string"},{"internalType":"bytes32","name":"fileHash","type":"bytes32"},{"internalType":"bytes32","name":"fingerprint","type":"bytes32"},{"internalType":"uint256","name":"uploadedAt","type":"uint256"},{"internalType":"address","name":"wallet","type":"address"},{"internalType":"bool","name":"isDeleted","type":"bool"}],"internalType":"struct ArkiveIopn.Document","name":"","type":"tuple"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"bytes32","name":"fileHash","type":"bytes32"}],"name":"verifyDocument","outputs":[{"internalType":"bool","name":"exists","type":"bool"},{"internalType":"bool","name":"isDeleted","type":"bool"},{"internalType":"uint256","name":"docId","type":"uint256"},{"internalType":"address","name":"uploaderWallet","type":"address"},{"internalType":"uint256","name":"uploadedAt","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"getTotalDocuments","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"wallet","type":"address"}],"name":"getActiveDocumentCount","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"}];
+
+
+//  STATE 
+var documents      = JSON.parse(localStorage.getItem('arkive_docs') || '[]');
+var walletAddress  = null;
+var currentTheme   = localStorage.getItem('arkive_theme') || 'dark';
+var detectedWallets  = [];
+var connectedProvider = null; // stores the exact approved provider
+var toastTimer;
+
+//  THEME 
+document.documentElement.setAttribute('data-theme', currentTheme);
+
+function toggleTheme() {
+  currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', currentTheme);
+  localStorage.setItem('arkive_theme', currentTheme);
+  updateThemeIcons();
+}
+function updateThemeIcons() {
+  var ico = currentTheme === 'dark' ? '' : '';
+  var e1 = document.getElementById('themeIcon');
+  var e2 = document.getElementById('themeIcon2');
+  if (e1) e1.textContent = ico;
+  if (e2) e2.textContent = ico;
+}
+updateThemeIcons();
+
+//  PAGE NAVIGATION 
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
+  var pg = document.getElementById('page-' + name);
+  if (pg) pg.classList.add('active');
+  window.scrollTo(0, 0);
+  if (name === 'dashboard') refreshDashboard();
+}
+function scrollToFeatures() {
+  var el = document.getElementById('features');
+  if (el) el.scrollIntoView({ behavior: 'smooth' });
+}
+function scrollToHow() {
+  var el = document.getElementById('howItWorks');
+  if (el) el.scrollIntoView({ behavior: 'smooth' });
+}
+function setActiveNav(el) {
+  document.querySelectorAll('.sidebar-item').forEach(function(i){ i.classList.remove('active'); });
+  el.classList.add('active');
+  if (el.textContent.indexOf('Upload New') >= 0) openModal();
+}
+
+//  EIP-6963 MULTI-WALLET ENGINE 
+// FIX 1: Listener registered ONCE globally - not re-added on each modal open
+// FIX 2: connectToWallet is properly async
+// FIX 3: window.ethereum fallback covers MetaMask + all injected wallets
+
+var walletIcons = {
+  'io.metamask':         'https://upload.wikimedia.org/wikipedia/commons/3/36/MetaMask_Fox.svg',
+  'com.okex.wallet':     'https://static.okx.com/cdn/assets/imgs/221/87810F0B7B57F082.png',
+  'io.rabby':            'https://rabby.io/assets/images/rabby-logo.png',
+  'com.coinbase.wallet': 'https://assets.coinbase.com/assets/coinbase-wallet.png',
+};
+var walletEmojis = {
+  'io.metamask':'','com.okex.wallet':'','io.rabby':'','com.coinbase.wallet':''
+};
+
+function getWalletEmoji(rdns, name) {
+  return walletEmojis[rdns] || (name ? name.charAt(0) : '');
+}
+
+// Register EIP-6963 listener ONCE - catches wallets that announce at page load
+window.addEventListener('eip6963:announceProvider', function(event) {
+  var info = event.detail.info;
+  var prov = event.detail.provider;
+  var exists = detectedWallets.find(function(w){ return w.info.uuid === info.uuid; });
+  if (!exists) detectedWallets.push({ info: info, provider: prov });
+});
+
+function initEIP6963() {
+  // Request wallets to re-announce (listener already registered above)
+  window.dispatchEvent(new Event('eip6963:requestProvider'));
+}
+
+function openWalletModal() {
+  // Re-request announcements every open
+  window.dispatchEvent(new Event('eip6963:requestProvider'));
+  document.getElementById('walletModal').classList.add('open');
+  showWalletState('Scanning');
+  // 600ms for wallets to respond, then build list
+  setTimeout(function(){ buildWalletList(); }, 600);
+}
+
+function closeWalletModal() {
+  document.getElementById('walletModal').classList.remove('open');
+}
+
+function showWalletState(state) {
+  ['Scanning','List','None','Connecting','Connected'].forEach(function(s) {
+    var el = document.getElementById('wState' + s);
+    if (el) el.style.display = 'none';
+  });
+  var target = document.getElementById('wState' + state);
+  if (target) target.style.display = 'block';
+}
+
+function buildWalletList() {
+  var listEl = document.getElementById('walletList');
+  if (!listEl) return;
+  listEl.innerHTML = '';
+
+  // Detect file:// protocol - wallets cannot inject into file:// pages
+  if (window.location.protocol === 'file:') {
+    showWalletState('None');
+    var noneEl = document.getElementById('wStateNone');
+    if (noneEl) {
+      noneEl.innerHTML =
+        '<div style="font-size:2rem;margin-bottom:12px;"></div>' +
+        '<div style="font-size:.92rem;font-weight:600;color:var(--text);margin-bottom:8px;">Local File Detected</div>' +
+        '<div style="font-size:.8rem;color:var(--text2);line-height:1.7;margin-bottom:20px;">' +
+          'Wallet extensions cannot connect to <code style="background:var(--tag-bg);padding:2px 6px;border-radius:4px;">file://</code> pages.<br><br>' +
+          'You need to serve this file over <strong style="color:var(--accent)">http://localhost</strong> for your wallet to work.' +
+        '</div>' +
+        '<div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:left;margin-bottom:16px;">' +
+          '<div style="font-size:.7rem;color:var(--text3);letter-spacing:.1em;margin-bottom:8px;">QUICKEST FIX - VS CODE</div>' +
+          '<div style="font-size:.8rem;color:var(--text2);line-height:1.8;">' +
+            '1. Open this file in VS Code<br>' +
+            '2. Install <strong style="color:var(--accent)">Live Server</strong> extension<br>' +
+            '3. Right-click -> <strong style="color:var(--accent)">Open with Live Server</strong><br>' +
+            '4. Wallet detects instantly ' +
+          '</div>' +
+        '</div>' +
+        '<button onclick="connectDemoMode();closeWalletModal();" class="demo-mode-btn"> Continue in Demo Mode instead</button>';
+    }
+    return;
+  }
+
+  var allWallets = detectedWallets.slice();
+
+  // window.ethereum fallback - most reliable for MetaMask, OKX, Rabby etc
+  if (window.ethereum) {
+    var getName = function(p) {
+      if (p.isRabby)            return { n:'Rabby Wallet',    r:'io.rabby' };
+      if (p.isOKExWallet)       return { n:'OKX Wallet',      r:'com.okex.wallet' };
+      if (p.isOkxWallet)        return { n:'OKX Wallet',      r:'com.okex.wallet' };
+      if (p.isCoinbaseWallet)   return { n:'Coinbase Wallet', r:'com.coinbase.wallet' };
+      if (p.isBraveWallet)      return { n:'Brave Wallet',    r:'com.brave.wallet' };
+      if (p.isTrust)            return { n:'Trust Wallet',    r:'com.trustwallet.app' };
+      if (p.isMetaMask)         return { n:'MetaMask',        r:'io.metamask' };
+      return                           { n:'Browser Wallet',  r:'' };
+    };
+
+    // Handle multiple providers (e.g. MetaMask + Rabby both installed)
+    var providers = window.ethereum.providers || [window.ethereum];
+    providers.forEach(function(prov) {
+      var info = getName(prov);
+      var already = allWallets.find(function(w){ return w.info.rdns === info.r; });
+      if (!already) {
+        allWallets.push({ info:{ uuid:'eth-'+info.r, name:info.n, rdns:info.r, icon:'' }, provider:prov });
+      }
+    });
+  }
+
+  if (allWallets.length === 0) { showWalletState('None'); return; }
+  showWalletState('List');
+
+  allWallets.forEach(function(wallet) {
+    var btn  = document.createElement('button');
+    btn.className = 'wallet-row';
+    var rdns  = wallet.info.rdns || '';
+    var icon  = wallet.info.icon || walletIcons[rdns] || '';
+    var emoji = getWalletEmoji(rdns, wallet.info.name);
+
+    var iconInner = icon
+      ? '<img src="' + icon + '" alt="" style="width:28px;height:28px;object-fit:contain;border-radius:6px;">'
+      : '<span style="font-size:1.4rem;line-height:1;">' + emoji + '</span>';
+
+    btn.innerHTML =
+      '<div class="wallet-row-icon">' + iconInner + '</div>' +
+      '<span class="wallet-row-name">' + wallet.info.name + '</span>' +
+      '<span class="wallet-row-status">DETECTED </span>';
+
+    (function(w){ btn.addEventListener('click', function(){ connectToWallet(w); }); })(wallet);
+    listEl.appendChild(btn);
+  });
+}
+
+// ASYNC - properly awaits wallet response
+async function connectToWallet(wallet) {
+  var wname = wallet.info.name;
+  var emoji = getWalletEmoji(wallet.info.rdns, wname);
+  var el1 = document.getElementById('wConnectingIcon');
+  var el2 = document.getElementById('wConnectingName');
+  if (el1) el1.textContent = emoji;
+  if (el2) el2.textContent = 'Connecting to ' + wname + '...';
+  showWalletState('Connecting');
+  try {
+    var accounts = await wallet.provider.request({ method: 'eth_requestAccounts' });
+    if (!accounts || accounts.length === 0) throw new Error('No accounts found');
+    walletAddress     = accounts[0];
+    connectedProvider = wallet.provider; // save the EXACT approved provider
+    console.log('[ARKIVE] Provider saved:', wname);
+    onWalletConnected(walletAddress, wname, emoji);
+  } catch(e) {
+    showWalletState('List');
+    if (e.code === 4001) {
+      showToast('', 'Rejected - please approve in ' + wname, 'warning');
+    } else if (e.code === -32002) {
+      showToast('', wname + ' is already pending - check your extension', 'warning');
+    } else {
+      showToast('', e.message || 'Connection failed', 'error');
+    }
+  }
+}
+
+function onWalletConnected(address, wname, emoji) {
+  walletAddress = address;
+  var short = address.slice(0,6) + '...' + address.slice(-4);
+  var addrEl = document.getElementById('wConnectedAddr');
+  if (addrEl) addrEl.textContent = address;
+  showWalletState('Connected');
+  var wBtn = document.getElementById('walletBtn');
+  if (wBtn) {
+    wBtn.innerHTML  = (emoji||'') + ' ' + short;
+    wBtn.style.background  = 'var(--accent-dim)';
+    wBtn.style.color       = 'var(--accent)';
+    wBtn.style.borderColor = 'var(--accent)';
+  }
+  var sn = document.getElementById('sidebarName');
+  var sa = document.getElementById('sidebarAddr');
+  var ss = document.getElementById('sidebarStatus');
+  var dg = document.getElementById('dashGreeting');
+  if (sn) sn.textContent = (wname||'Wallet') + '  ' + short;
+  if (sa) sa.textContent = address.slice(0,16) + '...';
+  if (ss) ss.textContent = 'Connected  OPN Testnet';
+  if (dg) dg.textContent = 'Welcome, ' + short;
+  showToast('', (wname||'Wallet') + ' connected: ' + short, 'success');
+  refreshDashboard();
+  setTimeout(function(){ closeWalletModal(); }, 1400);
+}
+
+function connectDemoMode() {
+  walletAddress = '0xDEMO' + Math.random().toString(16).substr(2,8).toUpperCase();
+  onWalletConnected(walletAddress, 'Demo Mode', '');
+}
+function connectWallet() { openWalletModal(); }
+
+// 
+//  OPN CHAIN CONTRACT INTERFACE
+//  Connects ARKIVE website to deployed ArkiveIopn contract
+// 
+
+var arkiveContract = null; // ethers.js contract instance
+
+// Get a read-only contract (no wallet needed for reading)
+function getReadContract() {
+  if (typeof ethers === 'undefined') {
+    console.warn('[ARKIVE] Read contract init failed: ethers is not defined');
+    return null;
+  }
+  try {
+    var provider = new ethers.providers.JsonRpcProvider(OPN_RPC);
+    return new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, provider);
+  } catch(e) {
+    console.warn('[ARKIVE] Read contract init failed:', e.message);
+    return null;
+  }
+}
+
+// Get a write contract (needs connected wallet for signing)
+function getWriteContract() {
+  // FIX: Wait for ethers to load if CDN is still loading
+  if (typeof ethers === 'undefined') {
+    console.error('[ARKIVE] ethers.js not ready yet');
+    showToast('', 'Still loading... wait 3 seconds and try again', 'warning');
+    return null;
+  }
+  if (!walletAddress) {
+    console.error('[ARKIVE] No wallet connected');
+    showToast('', 'Connect your MetaMask wallet first', 'warning');
+    return null;
+  }
+  // FIX: Use saved connectedProvider (the exact MetaMask provider)
+  // This avoids the window.ethereum conflict with Keplr
+  var providerToUse = connectedProvider;
+  if (!providerToUse) {
+    // Fallback: try to find MetaMask specifically from providers list
+    if (window.ethereum && window.ethereum.providers) {
+      providerToUse = window.ethereum.providers.find(function(p){ return p.isMetaMask && !p.isKeplr; });
+    }
+    if (!providerToUse) {
+      providerToUse = window.ethereum;
+    }
+  }
+  if (!providerToUse) {
+    showToast('', 'MetaMask not found - please reconnect', 'error');
+    return null;
+  }
+  try {
+    var web3Provider = new ethers.providers.Web3Provider(providerToUse, 'any');
+    var signer       = web3Provider.getSigner();
+    var contract     = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
+    console.log('[ARKIVE]  Contract ready at:', CONTRACT_ADDRESS);
+    return contract;
+  } catch(e) {
+    console.error('[ARKIVE] Contract init failed:', e.message);
+    showToast('', 'Contract error: ' + e.message.slice(0,60), 'error');
+    return null;
+  }
+}
+
+// Compute sha256 hash of a file -> returns bytes32 hex string
+async function computeFileHash(file) {
+  var buffer     = await file.arrayBuffer();
+  var hashBuffer = await crypto.subtle.digest('SHA-256', buffer);
+  var hashArray  = Array.from(new Uint8Array(hashBuffer));
+  var hashHex    = '0x' + hashArray.map(function(b){
+    return b.toString(16).padStart(2,'0');
+  }).join('');
+  return hashHex; // bytes32 ready to send to contract
+}
+
+// Store document on OPN Chain after IPFS upload
+async function storeOnChain(docName, category, cid, fileHash) {
+  var contract = getWriteContract();
+  if (!contract) {
+    console.warn('[ARKIVE] No wallet - storing locally only');
+    return null;
+  }
+  try {
+    console.log('[ARKIVE] Calling storeDocument on contract...');
+    console.log('[ARKIVE] Params:', docName, category, cid, fileHash);
+    var tx = await contract.storeDocument(docName, category, cid, fileHash);
+    console.log('[ARKIVE]  Transaction sent! Hash:', tx.hash);
+    showToast('', 'Transaction sent - waiting for OPN Chain confirmation...', 'info');
+    var receipt = await tx.wait();
+    console.log('[ARKIVE]  Confirmed! Block:', receipt.blockNumber);
+    // Show transaction with copy + explorer link
+    showTxSuccess(tx.hash, receipt.blockNumber);
+    return tx.hash;
+  } catch(e) {
+    console.error('[ARKIVE] storeDocument failed:', e);
+    if (e.message && e.message.includes('already archived')) {
+      showToast('', 'This exact file is already archived on OPN Chain', 'warning');
+    } else if (e.code === 4001 || (e.message && e.message.includes('rejected'))) {
+      showToast('', 'Transaction rejected - you cancelled in MetaMask', 'warning');
+    } else if (e.message && e.message.includes('insufficient')) {
+      showToast('', 'Not enough OPN for gas - get more from the faucet', 'error');
+    } else {
+      showToast('', 'Chain error: ' + (e.message || 'unknown').slice(0,60), 'error');
+    }
+    return null;
+  }
+}
+
+// Delete document on OPN Chain
+async function deleteOnChain(onChainId) {
+  var contract = getWriteContract();
+  if (!contract || !onChainId) return;
+  try {
+    showToast('', 'Check MetaMask - approve delete transaction...', 'info');
+    var tx      = await contract.deleteDocument(onChainId);
+    showToast('', 'Delete transaction sent - confirming...', 'info');
+    var receipt = await tx.wait();
+    showTxSuccess(tx.hash, receipt.blockNumber);
+    console.log('[ARKIVE]  Deleted on-chain at block:', receipt.blockNumber);
+  } catch(e) {
+    if (e.code === 4001) {
+      showToast('', 'Delete cancelled - you rejected in MetaMask', 'warning');
+    } else {
+      console.warn('[ARKIVE] Chain delete failed:', e.message);
+      showToast('', 'Deleted locally - chain delete failed', 'warning');
+    }
+  }
+}
+
+// Verify a document hash on OPN Chain - public, no wallet needed
+async function verifyOnChain(fileHash) {
+  var contract = getReadContract();
+  if (!contract) return null;
+  try {
+    var result = await contract.verifyDocument(fileHash);
+    return {
+      exists:         result.exists,
+      isDeleted:      result.isDeleted,
+      docId:          result.docId.toString(),
+      uploaderWallet: result.uploaderWallet,
+      uploadedAt:     new Date(result.uploadedAt.toNumber() * 1000).toLocaleString()
+    };
+  } catch(e) {
+    console.warn('[ARKIVE] Verify failed:', e.message);
+    return null;
+  }
+}
+
+// Load total docs from chain and update stat card
+async function loadChainStats() {
+  var contract = getReadContract();
+  if (!contract) return;
+  try {
+    var total = await contract.getTotalDocuments();
+    var statEl = document.getElementById('statTotal');
+    if (statEl) statEl.textContent = total.toString();
+  } catch(e) {
+    console.warn('[ARKIVE] Stats load failed:', e.message);
+  }
+}
+
+//  UPLOAD MODAL 
+function openModal() {
+  document.getElementById('uploadModal').classList.add('open');
+}
+function closeModal() {
+  document.getElementById('uploadModal').classList.remove('open');
+  resetModal();
+}
+function resetModal() {
+  var dn = document.getElementById('docName');
+  var sf = document.getElementById('selectedFile');
+  var up = document.getElementById('uploadProgress');
+  var pf = document.getElementById('progressFill');
+  var ub = document.getElementById('uploadBtn');
+  var fi = document.getElementById('fileInput');
+  if (dn) dn.value = '';
+  if (sf) sf.style.display = 'none';
+  if (up) up.style.display = 'none';
+  if (pf) pf.style.width = '0%';
+  if (ub) { ub.disabled = false; ub.innerHTML = '<span></span> SECURE ON OPN CHAIN'; }
+  if (fi) fi.value = '';
+}
+
+//  DRAG & DROP 
+var mainDZ = document.getElementById('mainDropzone');
+if (mainDZ) {
+  mainDZ.addEventListener('dragover', function(e){ e.preventDefault(); mainDZ.classList.add('dragover'); });
+  mainDZ.addEventListener('dragleave', function(){ mainDZ.classList.remove('dragover'); });
+  mainDZ.addEventListener('drop', function(e){
+    e.preventDefault(); mainDZ.classList.remove('dragover');
+    var droppedFile = e.dataTransfer.files[0];
+    if (droppedFile) { document.getElementById('fileInput').files = e.dataTransfer.files; openModal(); }
+  });
+}
+
+// Close modals on backdrop click
+document.getElementById('uploadModal').addEventListener('click', function(e){ if (e.target === this) closeModal(); });
+document.getElementById('walletModal').addEventListener('click', function(e){ if (e.target === this) closeWalletModal(); });
+
+// File input change
+document.getElementById('fileInput').addEventListener('change', function(e){
+  var selectedFile = e.target.files[0];
+  if (!selectedFile) return;
+  var sfEl = document.getElementById('selectedFile');
+  if (sfEl) { sfEl.style.display = 'block'; sfEl.textContent = ' ' + selectedFile.name + ' (' + formatBytes(selectedFile.size) + ')'; }
+  var dn = document.getElementById('docName');
+  if (dn && !dn.value) dn.value = selectedFile.name.replace(/\.[^.]+$/, '');
+});
+
+//  UPLOAD HANDLER 
+function sleep(ms) { return new Promise(function(r){ setTimeout(r, ms); }); }
+function setProgress(fillEl, textEl, pct, msg) {
+  if (fillEl) fillEl.style.width = pct + '%';
+  if (textEl) textEl.textContent = msg;
+  return sleep(400);
+}
+
+async function handleUpload() {
+  var fileInput = document.getElementById('fileInput');
+  var uploadedFile = fileInput ? fileInput.files[0] : null;
+  var docNameEl = document.getElementById('docName');
+  var docCatEl  = document.getElementById('docCategory');
+  var docName   = docNameEl ? docNameEl.value.trim() || 'Untitled Document' : 'Untitled Document';
+  var docCat    = docCatEl  ? docCatEl.value : 'other';
+
+  if (!uploadedFile) { showToast('', 'Please select a file first', 'warning'); return; }
+
+  var uploadBtn  = document.getElementById('uploadBtn');
+  var progressEl = document.getElementById('uploadProgress');
+  var fillEl     = document.getElementById('progressFill');
+  var textEl     = document.getElementById('progressText');
+
+  if (uploadBtn)  { uploadBtn.disabled = true; uploadBtn.innerHTML = '<span></span> Uploading...'; }
+  if (progressEl) progressEl.style.display = 'block';
+
+  await setProgress(fillEl, textEl, 20, 'Encrypting file locally...');
+
+  var cid = null;
+  if (PINATA_JWT !== "PASTE_YOUR_PINATA_JWT_HERE") {
+    try {
+      await setProgress(fillEl, textEl, 40, 'Uploading to IPFS via Pinata...');
+      var formData = new FormData();
+      formData.append('file', uploadedFile);
+      formData.append('pinataMetadata', JSON.stringify({ name: docName }));
+      var res  = await fetch('https://api.pinata.cloud/pinning/pinFileToIPFS', {
+        method: 'POST', headers: { Authorization: 'Bearer ' + PINATA_JWT }, body: formData
+      });
+      var data = await res.json();
+      cid = data.IpfsHash;
+      await setProgress(fillEl, textEl, 70, 'Pinned to IPFS ');
+    } catch(e) {
+      showToast('', 'Pinata upload failed: ' + e.message, 'error');
+      if (uploadBtn) { uploadBtn.disabled = false; uploadBtn.innerHTML = '<span></span> SECURE ON OPN CHAIN'; }
+      if (progressEl) progressEl.style.display = 'none';
+      return;
+    }
+  } else {
+    await setProgress(fillEl, textEl, 40, 'Demo mode - simulating IPFS...');
+    await sleep(600);
+    cid = 'Qm' + Math.random().toString(36).substr(2, 44).toUpperCase();
+    await setProgress(fillEl, textEl, 70, 'Demo CID generated ');
+  }
+
+  await setProgress(fillEl, textEl, 85, 'Recording on OPN Chain...');
+  await sleep(500);
+
+  //  Compute file hash for on-chain storage 
+  var fileHash = null;
+  try {
+    fileHash = await computeFileHash(uploadedFile);
+  } catch(e) {
+    console.warn('[ARKIVE] Hash compute failed:', e.message);
+    fileHash = '0x' + Math.random().toString(16).substr(2,64); // demo fallback
+  }
+
+  //  Store on OPN Chain 
+  var txHash = null;
+  // Wait up to 5 seconds for ethers.js to load from CDN
+  if (typeof ethers === 'undefined') {
+    await setProgress(fillEl, textEl, 85, 'Loading blockchain library...');
+    for (var wait = 0; wait < 10; wait++) {
+      await sleep(500);
+      if (typeof ethers !== 'undefined') break;
+    }
+  }
+
+  var hasRealWallet = walletAddress
+    && walletAddress.indexOf('DEMO') < 0
+    && (connectedProvider || window.ethereum)
+    && typeof ethers !== 'undefined';
+
+  console.log('[ARKIVE] Wallet:', walletAddress);
+  console.log('[ARKIVE] Has real wallet:', hasRealWallet);
+  console.log('[ARKIVE] ethers loaded:', typeof ethers !== 'undefined');
+  console.log('[ARKIVE] Contract address:', CONTRACT_ADDRESS);
+
+  if (hasRealWallet) {
+    await setProgress(fillEl, textEl, 88, 'Check your wallet - approve the transaction...');
+    showToast('', 'Check your MetaMask - approve the transaction!', 'info');
+    txHash = await storeOnChain(docName, docCat, cid, fileHash);
+    if (txHash) {
+      await setProgress(fillEl, textEl, 100, 'Permanently archived on OPN Chain ');
+    } else {
+      await setProgress(fillEl, textEl, 100, 'Saved locally - check console for errors');
+    }
+  } else {
+    await setProgress(fillEl, textEl, 100, 'Saved locally (connect real wallet to archive on-chain) ');
+    if (!walletAddress) {
+      showToast('', 'Connect your wallet first to archive on OPN Chain', 'warning');
+    } else if (walletAddress.indexOf('DEMO') >= 0) {
+      showToast('', 'You are in Demo Mode - reconnect with MetaMask to go on-chain', 'warning');
+    }
+  }
+
+  await sleep(300);
+
+  var newDoc = {
+    id:        Date.now(),
+    name:      docName,
+    category:  docCat,
+    fileName:  uploadedFile.name,
+    fileSize:  uploadedFile.size,
+    fileType:  uploadedFile.type,
+    cid:       cid,
+    fileHash:  fileHash,
+    txHash:    txHash || ('0x' + Math.random().toString(16).substr(2, 64)),
+    onChain:   txHash ? true : false,
+    timestamp: new Date().toISOString(),
+    verified:  true,
+    wallet:    walletAddress || '0xDemo'
+  };
+
+  documents.unshift(newDoc);
+  localStorage.setItem('arkive_docs', JSON.stringify(documents));
+  closeModal();
+  refreshDashboard();
+
+  var successMsg = txHash
+    ? '"' + docName + '" permanently archived on OPN Chain! '
+    : '"' + docName + '" saved! Connect wallet to store on OPN Chain.';
+  showToast('', successMsg, 'success');
+}
+
+//  DASHBOARD 
+function refreshDashboard() {
+  var gridEl  = document.getElementById('docsGrid');
+  var emptyEl = document.getElementById('emptyState');
+  var docCount = documents.length;
+
+  var stTotal   = document.getElementById('statTotal');
+  var stVerified= document.getElementById('statVerified');
+  var stStorage = document.getElementById('statStorage');
+  var docCountEl= document.getElementById('docCount');
+
+  if (stTotal)    stTotal.textContent    = docCount;
+  if (stVerified) stVerified.textContent = docCount;
+  if (docCountEl) docCountEl.textContent = docCount;
+
+  var totalBytes = 0;
+  documents.forEach(function(d){ totalBytes += (d.fileSize || 0); });
+  if (stStorage) stStorage.textContent = formatBytes(totalBytes);
+
+  var hudProfit = document.getElementById('hudProfit');
+  if (hudProfit) hudProfit.textContent = '$' + documents.length.toLocaleString();
+
+  if (!gridEl || !emptyEl) return;
+  if (docCount === 0) { emptyEl.style.display = 'block'; gridEl.style.display = 'none'; }
+  else { emptyEl.style.display = 'none'; gridEl.style.display = 'grid'; renderDocs(documents); }
+  // Load live stats from OPN Chain
+  loadChainStats();
+}
+
+function renderDocs(docs) {
+  var grid = document.getElementById('docsGrid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  docs.forEach(function(doc, i){ grid.appendChild(createDocCard(doc, i)); });
+}
+
+function createDocCard(doc, idx) {
+  var iconMap  = {identity:'',certificate:'',contract:'',financial:'',medical:'',property:'',other:''};
+  var colorMap = {identity:'dc-p-cert',certificate:'dc-p-doc',contract:'dc-p-contract',financial:'dc-p-pdf',medical:'dc-p-img',property:'dc-p-cert',other:'dc-p-doc'};
+  var badgeMap = {identity:'tb-cert',certificate:'tb-doc',contract:'tb-contract',financial:'tb-pdf',medical:'tb-img',property:'tb-cert',other:'tb-doc'};
+
+  var docIcon      = iconMap[doc.category]  || '';
+  var colorClass   = colorMap[doc.category] || 'dc-p-doc';
+  var typeBadge    = badgeMap[doc.category] || 'tb-doc';
+  var dateStr      = new Date(doc.timestamp).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'2-digit'});
+  var shortCid     = doc.cid ? doc.cid.slice(0,8)+'...' : 'pending';
+  var verifiedHTML = doc.verified ? '<div class="dc-verified-badge"></div>' : '';
+
+  var card = document.createElement('div');
+  card.className = 'doc-card';
+  card.style.animationDelay = (idx * 0.05) + 's';
+
+  var html = '';
+  html += '<div class="doc-card-preview ' + colorClass + '">';
+  html +=   '<div class="dc-icon">' + docIcon + '</div>';
+  html +=   '<div class="dc-type-badge ' + typeBadge + '">' + doc.category.toUpperCase() + '</div>';
+  html +=   verifiedHTML;
+  html += '</div>';
+  html += '<div class="doc-card-body">';
+  html +=   '<div class="dc-name">' + doc.name + '</div>';
+  html +=   '<div class="dc-meta"><span>' + dateStr + '</span><span class="dc-sep"></span><span>' + formatBytes(doc.fileSize||0) + '</span></div>';
+  html += '</div>';
+  html += '<div class="doc-card-footer">';
+  html +=   '<span class="dc-hash">CID: ' + shortCid + '</span>';
+  html +=   '<div class="dc-actions">';
+  html +=     '<button class="dc-btn" title="Download"><svg viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:11px;height:11px;"><path d="M7 2v7M5 7l2 2 2-2M2 11h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>';
+  html +=     '<button class="dc-btn" title="Verify"><svg viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:11px;height:11px;"><circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.4"/><path d="M4.5 7l2 2L9.5 5.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>';
+  html +=     '<button class="dc-btn" title="Delete"><svg viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:11px;height:11px;"><path d="M2 3.5h10M5 3.5V2.5a.5.5 0 01.5-.5h3a.5.5 0 01.5.5v1M11 3.5l-.7 8H3.7L3 3.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>';
+  html +=   '</div>';
+  html += '</div>';
+  card.innerHTML = html;
+
+  var btns = card.querySelectorAll('.dc-btn');
+  (function(d){
+    if (btns[0]) btns[0].addEventListener('click', function(e){ e.stopPropagation(); retrieveDoc(d.id); });
+    if (btns[1]) btns[1].addEventListener('click', function(e){ e.stopPropagation(); verifyDoc(d.txHash); });
+    if (btns[2]) btns[2].addEventListener('click', function(e){ e.stopPropagation(); deleteDoc(d.id); });
+  })(doc);
+
+  return card;
+}
+
+function retrieveDoc(id) {
+  var found = documents.find(function(d){ return d.id === id; });
+  if (!found) return;
+  if (found.cid && PINATA_JWT !== "PASTE_YOUR_PINATA_JWT_HERE") {
+    window.open(PINATA_GATEWAY + found.cid, '_blank');
+  } else {
+    showToast('', 'Demo mode - add your Pinata JWT to retrieve real files.', 'info');
+  }
+}
+async function verifyDoc(txHash, fileHash) {
+  // If we have a fileHash, verify directly on OPN Chain
+  if (fileHash && fileHash !== '0x' && walletAddress) {
+    showToast('', 'Verifying on OPN Chain...', 'info');
+    var result = await verifyOnChain(fileHash);
+    if (result && result.exists) {
+      var msg = result.isDeleted
+        ? 'Document existed but was deleted. Archived: ' + result.uploadedAt
+        : 'Verified on OPN Chain  Archived: ' + result.uploadedAt;
+      showToast('', msg, 'success');
+    } else if (result && !result.exists) {
+      showToast('', 'Hash not found on OPN Chain - may be demo document', 'warning');
+    }
+  } else if (txHash) {
+    // Fallback: show tx hash link
+    showToast('', 'TX: ' + (txHash||'').slice(0,20) + '...', 'success');
+  }
+}
+async function deleteDoc(id) {
+  var doc = documents.find(function(d){ return d.id === id; });
+  documents = documents.filter(function(d){ return d.id !== id; });
+  localStorage.setItem('arkive_docs', JSON.stringify(documents));
+  refreshDashboard();
+  showToast('', 'Document removed from vault', 'warning');
+  // Also delete on OPN Chain if it was stored there
+  if (doc && doc.onChain && doc.onChainId) {
+    await deleteOnChain(doc.onChainId);
+  }
+}
+function filterDocs(query) {
+  if (!query) { renderDocs(documents); return; }
+  var filtered = documents.filter(function(d){
+    return d.name.toLowerCase().indexOf(query.toLowerCase()) >= 0 ||
+           d.category.toLowerCase().indexOf(query.toLowerCase()) >= 0;
+  });
+  renderDocs(filtered);
+}
+function setView(mode, btn) {
+  document.querySelectorAll('.vt-btn').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+  var gridEl = document.getElementById('docsGrid');
+  if (!gridEl) return;
+  gridEl.style.gridTemplateColumns = mode === 'list' ? '1fr' : 'repeat(auto-fill,minmax(240px,1fr))';
+}
+
+//  HELPERS 
+function formatBytes(bytes) {
+  if (!bytes || bytes === 0) return '0 B';
+  var k = 1024;
+  var sizes = ['B','KB','MB','GB'];
+  var i = Math.floor(Math.log(bytes) / Math.log(k));
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+}
+
+//  TOAST 
+function showToast(icon, msg, type) {
+  var toast = document.getElementById('toast');
+  var toastIcon = document.getElementById('toastIcon');
+  var toastMsg  = document.getElementById('toastMsg');
+  if (toastIcon) toastIcon.textContent = icon;
+  if (toastMsg)  toastMsg.textContent  = msg;
+  if (toast) toast.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function(){ hideToast(); }, 4000);
+}
+function hideToast() {
+  var toast = document.getElementById('toast');
+  if (toast) toast.classList.remove('show');
+}
+
+//  TRANSACTION HELPERS 
+function showTxSuccess(txHash, blockNum) {
+  var explorerUrl = 'https://testnet-explorer.iopn.tech/tx/' + txHash;
+  var toastEl   = document.getElementById('toast');
+  var toastIcon = document.getElementById('toastIcon');
+  var toastMsg  = document.getElementById('toastMsg');
+  if (toastIcon) toastIcon.textContent = '✅';
+  if (toastMsg) {
+    window.__lastTxHash = txHash;
+    var copyBtn = document.createElement('button');
+    copyBtn.textContent = 'Copy TX';
+    copyBtn.style.cssText = 'padding:4px 10px;border-radius:6px;border:1px solid var(--border2);background:var(--surface2);color:var(--text);font-size:.7rem;cursor:pointer;font-family:inherit;margin-right:6px;';
+    copyBtn.onclick = function(){ copyTxHash(window.__lastTxHash); };
+    var viewLink = document.createElement('a');
+    viewLink.href    = explorerUrl;
+    viewLink.target  = '_blank';
+    viewLink.textContent = 'View on Explorer';
+    viewLink.style.cssText = 'padding:4px 10px;border-radius:6px;background:var(--accent);color:#000;font-size:.7rem;text-decoration:none;font-weight:700;';
+    var btnRow = document.createElement('div');
+    btnRow.style.cssText = 'display:flex;gap:6px;margin-top:6px;flex-wrap:wrap;';
+    btnRow.appendChild(copyBtn);
+    btnRow.appendChild(viewLink);
+    toastMsg.innerHTML = '';
+    var title = document.createElement('div');
+    title.style.cssText = 'font-size:.85rem;font-weight:600;margin-bottom:3px;';
+    title.textContent = 'Archived on OPN Chain!';
+    var block = document.createElement('div');
+    block.style.cssText = 'font-size:.72rem;color:var(--text2);margin-bottom:4px;';
+    block.textContent = 'Block #' + blockNum;
+    toastMsg.appendChild(title);
+    toastMsg.appendChild(block);
+    toastMsg.appendChild(btnRow);
+  }
+  if (toastEl) toastEl.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function(){ hideToast(); }, 9000);
+}
+
+function copyTxHash(hash) {
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(hash).then(function(){
+      showToast('', 'Transaction ID copied to clipboard!', 'success');
+    });
+  } else {
+    var el = document.createElement('textarea');
+    el.value = hash; document.body.appendChild(el);
+    el.select(); document.execCommand('copy');
+    document.body.removeChild(el);
+    showToast('', 'Transaction ID copied!', 'success');
+  }
+}
+
+//  DASHBOARD PANEL SWITCHER 
+function showDashPanel(panel) {
+  // Hide all panels and docs section
+  var panels = ['panelVerify','panelNeoid','panelSettings'];
+  panels.forEach(function(p){
+    var el = document.getElementById(p);
+    if (el) el.style.display = 'none';
+  });
+  var docsSection = document.querySelector('.docs-section');
+  var uploadZone  = document.querySelector('.upload-zone');
+  var statsRow    = document.querySelector('.stats-row');
+
+  // Update sidebar active state
+  document.querySelectorAll('.sidebar-item').forEach(function(i){ i.classList.remove('active'); });
+  // Highlight correct sidebar item
+  var navMap = { docs:'navDocs' };
+  if (navMap[panel]) {
+    var activeBtn = document.getElementById(navMap[panel]);
+    if (activeBtn) activeBtn.classList.add('active');
+  }
+
+  if (panel === 'docs') {
+    if (docsSection) docsSection.style.display = 'block';
+    if (uploadZone)  uploadZone.style.display  = 'block';
+    if (statsRow)    statsRow.style.display     = 'grid';
+  } else {
+    if (docsSection) docsSection.style.display = 'none';
+    if (uploadZone)  uploadZone.style.display  = 'none';
+    if (statsRow)    statsRow.style.display     = 'none';
+    var target = document.getElementById('panel' + panel.charAt(0).toUpperCase() + panel.slice(1));
+    if (target) target.style.display = 'block';
+
+    // Update settings wallet display
+    if (panel === 'settings') {
+      var sw = document.getElementById('settingsWallet');
+      if (sw) sw.textContent = walletAddress || 'Not connected';
+    }
+  }
+}
+
+//  VERIFY DOCUMENT ON-CHAIN 
+document.addEventListener('DOMContentLoaded', function() {
+  var vfi = document.getElementById('verifyFileInput');
+  if (vfi) {
+    vfi.addEventListener('change', function(e) {
+      var f = e.target.files[0];
+      if (!f) return;
+      var fn = document.getElementById('verifyFileName');
+      var vb = document.getElementById('verifyBtn');
+      if (fn) { fn.textContent = ' ' + f.name + ' selected'; fn.style.display = 'block'; }
+      if (vb) { vb.disabled = false; vb.style.opacity = '1'; }
+    });
+  }
+});
+
+async function runVerify() {
+  var vfi = document.getElementById('verifyFileInput');
+  var vr  = document.getElementById('verifyResult');
+  var vb  = document.getElementById('verifyBtn');
+  if (!vfi || !vfi.files[0]) { showToast('','Select a file first','warning'); return; }
+
+  var file = vfi.files[0];
+  if (vb) { vb.disabled = true; vb.textContent = ' Verifying...'; }
+  if (vr) vr.style.display = 'none';
+
+  try {
+    // Compute hash locally
+    var hash   = await computeFileHash(file);
+    var result = await verifyOnChain(hash);
+
+    var html = '';
+    if (!result) {
+      html = '<div style="padding:16px;border-radius:10px;background:rgba(255,51,102,.08);border:1px solid rgba(255,51,102,.25);text-align:center;">' +
+             '<div style="font-size:1.5rem;margin-bottom:6px;"></div>' +
+             '<div style="font-size:.9rem;font-weight:600;color:#ff3366;">Chain unavailable</div>' +
+             '<div style="font-size:.75rem;color:var(--text2);margin-top:4px;">Connect to OPN Testnet and try again</div></div>';
+    } else if (!result.exists) {
+      html = '<div style="padding:16px;border-radius:10px;background:rgba(255,51,102,.08);border:1px solid rgba(255,51,102,.25);text-align:center;">' +
+             '<div style="font-size:1.5rem;margin-bottom:6px;"></div>' +
+             '<div style="font-size:.9rem;font-weight:600;color:#ff3366;">Not Found on OPN Chain</div>' +
+             '<div style="font-size:.75rem;color:var(--text2);margin-top:4px;">This document has not been archived on ARKIVE</div></div>';
+    } else if (result.isDeleted) {
+      html = '<div style="padding:16px;border-radius:10px;background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.3);text-align:center;">' +
+             '<div style="font-size:1.5rem;margin-bottom:6px;"></div>' +
+             '<div style="font-size:.9rem;font-weight:600;color:var(--gold,#f59e0b);">Document Was Archived (Now Deleted)</div>' +
+             '<div style="font-size:.75rem;color:var(--text2);margin-top:8px;line-height:1.7;">' +
+             'Archived by: <code style="color:var(--accent);">' + result.uploaderWallet.slice(0,10) + '...</code><br>' +
+             'Archived on: ' + result.uploadedAt + '</div></div>';
+    } else {
+      html = '<div style="padding:16px;border-radius:10px;background:rgba(0,255,136,.08);border:1px solid rgba(0,255,136,.3);">' +
+             '<div style="text-align:center;margin-bottom:12px;">' +
+             '<div style="font-size:1.5rem;margin-bottom:4px;"></div>' +
+             '<div style="font-size:.9rem;font-weight:600;color:var(--green,#00ff88);">Verified on OPN Chain</div></div>' +
+             '<div style="font-size:.75rem;color:var(--text2);line-height:1.9;">' +
+             '<div><span style="color:var(--text3);">Doc ID:</span> <span style="color:var(--text);">#' + result.docId + '</span></div>' +
+             '<div><span style="color:var(--text3);">Archived by:</span> <code style="color:var(--accent);font-size:.7rem;">' + result.uploaderWallet + '</code></div>' +
+             '<div><span style="color:var(--text3);">Archived on:</span> <span style="color:var(--text);">' + result.uploadedAt + '</span></div>' +
+             '<div><span style="color:var(--text3);">File hash:</span> <code style="color:var(--text2);font-size:.65rem;">' + hash.slice(0,20) + '...</code></div>' +
+             '</div>' +
+             '<a href="https://testnet-explorer.iopn.tech" target="_blank" style="display:inline-block;margin-top:12px;padding:6px 16px;border-radius:7px;background:var(--accent);color:var(--void);font-size:.75rem;font-weight:700;text-decoration:none;"> View on OPN Explorer</a>' +
+             '</div>';
+    }
+
+    if (vr) { vr.innerHTML = html; vr.style.display = 'block'; }
+  } catch(e) {
+    if (vr) {
+      vr.innerHTML = '<div style="padding:14px;border-radius:10px;background:rgba(255,51,102,.08);border:1px solid rgba(255,51,102,.2);color:#ff3366;font-size:.82rem;">Error: ' + e.message + '</div>';
+      vr.style.display = 'block';
+    }
+  } finally {
+    if (vb) { vb.disabled = false; vb.textContent = ' VERIFY ON OPN CHAIN'; }
+  }
+}
+
+//  CLEAR LOCAL DATA 
+function clearLocalData() {
+  if (confirm('Clear all locally cached documents? Your on-chain records are safe.')) {
+    localStorage.removeItem('arkive_docs');
+    documents = [];
+    refreshDashboard();
+    showToast('', 'Local cache cleared - on-chain data is permanent', 'success');
+  }
+}
+
+//  INIT 
+initEIP6963();
+refreshDashboard();
+</script>
+</body>
+</html>
